@@ -28,4 +28,6 @@ public interface ProductService {
 	// end pagination
 	
 	AdminProductResponse create(CreateProductRequest request);
+	AdminProductResponse changeStatus(String id);
+	
 }

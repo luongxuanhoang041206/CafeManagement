@@ -16,7 +16,7 @@ public class AdminProductController {
     public AdminProductController(ProductService service) {
         this.service = service;
     }
-
+    // Lay danh sach san pham + pagination + search
     @GetMapping
     public List<AdminProductResponse> search(
             @RequestParam(required = false) String name,
@@ -30,8 +30,16 @@ public class AdminProductController {
 
         return service.search(name, minPrice, maxPrice, active, groupId, page, size).getContent();
     }
+    // tao moi san pham
     @PostMapping
     public AdminProductResponse create(@RequestBody CreateProductRequest request) {
         return service.create(request);
     }
+    // sua trang thai san pham
+    @PatchMapping("/{id}/status")
+    public AdminProductResponse changeStatus(@PathVariable String id) {
+        return service.changeStatus(id);
+    }
+    
+    
 }

@@ -1,0 +1,1 @@
+Thư mục repository tương tác trực tiếp với database sẽ sử dụng JpaRepository, CrudRepository hoặc các interface tương tự của Spring Data JPA để thực hiện CRUD và query dữ liệu. Repository chỉ nên chứa các thao tác liên quan đến dữ liệu (truy vấn, lưu, xóa)

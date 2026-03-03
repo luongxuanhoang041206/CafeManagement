@@ -88,6 +88,7 @@ public class ProductServiceImpl implements ProductService {
 
         return productPage.map(mapper::toAdmin);
     }
+    // tao moi san pham
     @Override
     public AdminProductResponse create(CreateProductRequest request) {
 
@@ -101,5 +102,15 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity savedProduct = repo.save(product);
 
         return mapper.toAdmin(savedProduct);
+    }
+    // Thay doi trang thai
+    @Override
+    public AdminProductResponse changeStatus(String id) {
+        ProductEntity product = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Not found"));
+        product.setActive(!product.isActive());
+        ProductEntity updated = repo.save(product);
+
+        return mapper.toAdmin(updated);
     }
 }

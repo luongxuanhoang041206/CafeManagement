@@ -1,0 +1,3 @@
+Thư mục service chứa logic của hệ thống
+trung gian giữa controller và repository. Service xử lý các logic như kiểm tra điều kiện, tính toán, phân quyền, chuyển đổi DTO, kết hợp nhiều repository lại với nhau.. controller chỉ gọi service, còn service mới là nơi quyết định hệ thống hoạt động như thế nào. 
+có thêm serviceimpl giúp dễ đọc code hơn khi xử lí logic chính còn service chỉ là interface khai báo thôi
