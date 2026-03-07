@@ -3,7 +3,7 @@ package com.example.demo.dto.request;
 import lombok.Data;
 
 @Data
-public class CreateProductRequest {
+public class UpdateProductRequest {
 	//private String id;
     private String name;
     private Double price;

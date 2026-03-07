@@ -20,8 +20,8 @@ public class ProductMapper {
                 p.getId(),
                 p.getName(),
                 p.getPrice(),
-                p.isActive(),
-                p.groupId()
+                p.getActive(),
+                p.getGroupId()
         );
     }
 }

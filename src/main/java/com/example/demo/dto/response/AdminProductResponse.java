@@ -2,13 +2,13 @@ package com.example.demo.dto.response;
 
 public class AdminProductResponse {
 
-    private String id;
+    private Long id;
     private String name;
     private double price;
     private boolean active;
     private String groupId;
 
-    public AdminProductResponse(String id, String name,
+    public AdminProductResponse(Long id, String name,
                                 double price, boolean active, String groupId) {
         this.id = id;
         this.name = name;
@@ -17,7 +17,7 @@ public class AdminProductResponse {
         this.groupId = groupId;
     }
 
-    public String getId() { return id; }
+    public Long getId() { return id; }
     public String getName() { return name; }
     public double getPrice() { return price; }
     public boolean getActive() { return active; }
