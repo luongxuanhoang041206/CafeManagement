@@ -1,5 +1,8 @@
 package com.example.demo.dto.response;
 
+import lombok.Data;
+
+@Data
 public class AdminProductResponse {
 
     private Long id;
@@ -16,10 +19,4 @@ public class AdminProductResponse {
         this.active = active;
         this.groupId = groupId;
     }
-
-    public Long getId() { return id; }
-    public String getName() { return name; }
-    public double getPrice() { return price; }
-    public boolean getActive() { return active; }
-    public String getGroupid() { return groupId; }
 }
