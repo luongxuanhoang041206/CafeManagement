@@ -11,10 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.dto.request.CreateOrderItemRequest;
 import com.example.demo.dto.request.CreateOrderRequest;
 import com.example.demo.dto.response.AdminOrderResponse;
+import com.example.demo.dto.response.OrderResponse;
 import com.example.demo.entity.OrderEntity;
 import com.example.demo.entity.OrderItemEntity;
 import com.example.demo.entity.PaymentEntity;
-import com.example.demo.mapper.OrderMapper;
+import com.example.demo.mapper.OrderMapperToAdmin;
+import com.example.demo.mapper.OrderMapperToClient;
 import com.example.demo.repository.OrderItemRepository;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.PaymentRepository;
@@ -27,18 +29,21 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository repo;
     private final OrderItemRepository orderItemRepository;
     private final PaymentRepository paymentRepository;
-    private final OrderMapper mapper;
+    private final OrderMapperToClient mapper;
+	private final OrderMapperToAdmin mapperAdmin;
 
     public OrderServiceImpl(
             OrderRepository repo,
             OrderItemRepository orderItemRepository,
             PaymentRepository paymentRepository,
-            OrderMapper mapper
+            OrderMapperToClient mapper,
+            OrderMapperToAdmin mapperAdmin
     ) {
         this.repo = repo;
         this.orderItemRepository = orderItemRepository;
         this.paymentRepository = paymentRepository;
         this.mapper = mapper;
+        this.mapperAdmin = mapperAdmin;
     }
 
     @Override
@@ -66,14 +71,14 @@ public class OrderServiceImpl implements OrderService {
 
         Page<OrderEntity> orders = repo.findAll(spec, pageable);
 
-        return orders.map(mapper::toAdmin);
+        return orders.map(mapperAdmin::toAdmin);
     }
 
     @Transactional
     @Override
-    public AdminOrderResponse create(CreateOrderRequest request) {
+    public OrderResponse create(CreateOrderRequest request) {
 
-        // 1️⃣ create order
+        //  create order
         OrderEntity order = new OrderEntity();
         order.setOrderSource(request.getOrderSource());
         order.setTableId(request.getTableId());
@@ -93,15 +98,19 @@ public class OrderServiceImpl implements OrderService {
         }
 
         OrderEntity savedOrder = repo.save(order);
-        for (CreateOrderItemRequest item : request.getItems()) {
-
-            OrderItemEntity orderItem = new OrderItemEntity();
-            orderItem.setOrderId(savedOrder.getId());
-            orderItem.setProductId(item.getProductId());
-            orderItem.setQuantity(item.getQuantity());
-            orderItem.setPrice(item.getPrice());
-
-            orderItemRepository.save(orderItem);
+        if (request.getItems() != null) {
+	        for (CreateOrderItemRequest item : request.getItems()) {
+	
+	            OrderItemEntity orderItem = new OrderItemEntity();
+	            orderItem.setOrderId(savedOrder.getId());
+	            orderItem.setProductId(item.getProductId());
+	            orderItem.setQuantity(item.getQuantity());
+	            orderItem.setPrice(item.getPrice());
+	
+	            orderItemRepository.save(orderItem);
+	        }
+        } else {
+        	throw new RuntimeException("Order must contain at least one item");
         }
 
         PaymentEntity payment = new PaymentEntity();
@@ -113,6 +122,6 @@ public class OrderServiceImpl implements OrderService {
 
         paymentRepository.save(payment);
 
-        return mapper.toAdmin(savedOrder);
+        return mapper.toClient(savedOrder);
     }
 }

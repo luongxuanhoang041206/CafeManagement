@@ -7,9 +7,10 @@ import org.springframework.data.domain.Pageable;
 
 import com.example.demo.dto.request.CreateOrderRequest;
 import com.example.demo.dto.response.AdminOrderResponse;
+import com.example.demo.dto.response.OrderResponse;
 
 public interface OrderService {
-	AdminOrderResponse create(CreateOrderRequest request);
+	OrderResponse create(CreateOrderRequest request);
 	Page<AdminOrderResponse> search(
 	        LocalDateTime fromDate,
 	        LocalDateTime toDate,

@@ -33,12 +33,12 @@ public class UserServiceImpl implements UserService {
 		return userPage.map(mapper::toAdmin);
 	}
 	@Override
-	public void changeActive(String id) {
+	public void changeActive(Long id) {
 		UserEntity user = repo.findById(id)
 				.orElseThrow(() -> new RuntimeException("Not found"));
 	}
 	@Override
-	public void deleteUser(String id) {
+	public void deleteUser(Long id) {
 		UserEntity user = repo.findById(id)
 				.orElseThrow(() -> new RuntimeException("Not found"));
 		

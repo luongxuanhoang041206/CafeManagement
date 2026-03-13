@@ -1,12 +1,11 @@
 package com.example.demo.dto.response;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import lombok.Data;
 
 @Data
-public class AdminOrderResponse  {
+public class OrderResponse  {
 	private Long id;
 	private String orderSource;
 	private Long tableId;
@@ -15,8 +14,7 @@ public class AdminOrderResponse  {
 	private String status;
 	private Long totalAmount;
 	private LocalDateTime created_at;
-	
-	public AdminOrderResponse(Long id, String orderSource, Long tableId, Long userId, Long employeeId, String status,
+	public OrderResponse(Long id, String orderSource, Long tableId, Long userId, Long employeeId, String status,
 			Long totalAmount, LocalDateTime localDateTime) {
 		this.id = id;
 		this.orderSource = orderSource;

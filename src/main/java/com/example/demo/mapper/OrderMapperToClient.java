@@ -2,13 +2,13 @@ package com.example.demo.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.example.demo.dto.response.AdminOrderResponse;
+import com.example.demo.dto.response.OrderResponse;
 import com.example.demo.entity.OrderEntity;
 
 @Component
-public class OrderMapper  {
-	public AdminOrderResponse toAdmin(OrderEntity o) {
-		return new AdminOrderResponse(
+public class OrderMapperToClient  {
+	public OrderResponse toClient(OrderEntity o) {
+		return new OrderResponse(
 				o.getId(),
 				o.getOrderSource(),
 				o.getTableId(),

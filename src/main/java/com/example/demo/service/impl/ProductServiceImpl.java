@@ -76,8 +76,8 @@ public class ProductServiceImpl implements ProductService {
             Double minPrice,
             Double maxPrice,
             Boolean active,
-            String groupId,
-            Pageable pageable  
+            Long groupId,
+            Pageable pageable
     ) {
 
         Specification<ProductEntity> spec =
@@ -97,7 +97,7 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(request.getPrice());
         product.setActive(request.getActive());
         product.setGroupId(request.getGroupId());
-        product.setCreatedAt(new Date(0));  
+        product.setCreatedAt(new Date());  
         ProductEntity savedProduct = repo.save(product);
 
         return mapper.toAdmin(savedProduct);
@@ -163,12 +163,5 @@ public class ProductServiceImpl implements ProductService {
     			.orElseThrow(() -> new RuntimeException("Not found"));
     	return mapper.toAdmin(product);
     }
-
-	@Override
-	public Page<AdminProductResponse> search(String name, Double minPrice, Double maxPrice, Boolean active,
-			String groupId, int page, int size) {
-		// TODO Auto-generated method stub
-		return null;
-	}
     
 }

@@ -9,10 +9,10 @@ public class AdminProductResponse {
     private String name;
     private double price;
     private boolean active;
-    private String groupId;
+    private Long groupId;
 
     public AdminProductResponse(Long id, String name,
-                                double price, boolean active, String groupId) {
+                                double price, boolean active, Long groupId) {
         this.id = id;
         this.name = name;
         this.price = price;

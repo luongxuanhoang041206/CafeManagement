@@ -15,6 +15,5 @@ public class CreateOrderRequest  {
 	private Long totalAmount;
 	private Date created_at;
 	private List<CreateOrderItemRequest> items;
-
     private String paymentMethod;
 }

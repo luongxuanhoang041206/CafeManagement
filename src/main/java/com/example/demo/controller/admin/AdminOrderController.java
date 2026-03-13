@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.request.CreateOrderRequest;
 import com.example.demo.dto.response.AdminOrderResponse;
+import com.example.demo.dto.response.OrderResponse;
 import com.example.demo.service.OrderService;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -64,7 +65,7 @@ public class AdminOrderController  {
 	}
 	// tao moi 1 order 
 	@PostMapping
-	public AdminOrderResponse create(@RequestBody CreateOrderRequest request) {
+	public OrderResponse create(@RequestBody CreateOrderRequest request) {
 		return service.create(request); // dieu huong sang /checkout/success la do fe
 	} // chuyen sang client
 }

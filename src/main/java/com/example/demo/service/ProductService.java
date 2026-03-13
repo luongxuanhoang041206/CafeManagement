@@ -18,21 +18,21 @@ public interface ProductService {
 	List<AdminProductResponse> getAll();
 	
 	// pagination 
-	Page<AdminProductResponse> search(
-            String name,
-            Double minPrice,
-            Double maxPrice,
-            Boolean active,
-            String groupId,
-            int page,
-            int size
-    );
+//	Page<AdminProductResponse> search(
+//            String name,
+//            Double minPrice,
+//            Double maxPrice,
+//            Boolean active,
+//            Long groupId,
+//            int page,
+//            int size
+//    );
 	// end pagination
 	AdminProductResponse create(CreateProductRequest request);
 	AdminProductResponse changeStatus(Long id);
 	void deleteProduct(Long id);
 	AdminProductResponse update(UpdateProductRequest request, Long id);
 	AdminProductResponse detail(Long id);
-	Page<AdminProductResponse> search(String name, Double minPrice, Double maxPrice, Boolean active, String groupId,
+	Page<AdminProductResponse> search(String name, Double minPrice, Double maxPrice, Boolean active, Long groupId,
 			Pageable pageable);
 }
