@@ -113,7 +113,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) 
 
                 .authorizeHttpRequests(registry -> {
-                    registry.requestMatchers("/req/login", "/req/signup", "/css/**", "/js/**","/index", "/").permitAll();
+                    registry.requestMatchers("/req/login", "/req/signup", "/css/**", "/js/**","/index", "/image/**" ,"/").permitAll();
                     registry.anyRequest().authenticated();
                 })
 

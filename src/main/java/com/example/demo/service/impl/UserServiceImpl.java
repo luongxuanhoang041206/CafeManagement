@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 	//phan login
 	@Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserEntity> user = repo.findByName(username);
+        Optional<UserEntity> user = repo.findByNameOrEmail(username, username);
         if(user.isPresent()) {
             var userObj = user.get();
             return User.builder()

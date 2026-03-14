@@ -21,7 +21,7 @@ public class LoginController {
 
     @PostMapping("/req/login")
     public ResponseEntity<String> loginUser(@RequestBody LoginRequest loginRequest) {
-        return userRepository.findByName(loginRequest.username)
+        return userRepository.findByNameOrEmail(loginRequest.username, loginRequest.username)
             .map(user -> {
                 if (passwordEncoder.matches(loginRequest.password, user.getPassword())) {
                     return ResponseEntity.ok("Đăng nhập thành công!");

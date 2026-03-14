@@ -15,5 +15,5 @@ public interface UserRepository extends JpaRepository<UserEntity, String>,
 	List<UserEntity> findByNameContainingIgnoreCase(String name);
 	
 	//phuc vu login
-	Optional<UserEntity> findByName(String name);
+	Optional<UserEntity> findByNameOrEmail(String name, String email);
 }

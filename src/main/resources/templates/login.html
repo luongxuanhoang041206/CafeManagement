@@ -1,25 +1,16 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
-    <h1>Login</h1>
-    <form id="loginForm" action="javascript:void(0)">
-<!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/login.js}" defer></script>
 </head>
 <body>
     <div class="sign_in">
         <div class="image">
-            <img src="image/side_picture.avif" alt="image">
+            <img src="/image/side_picture.avif" alt="image">
         </div>
         <form id="form" class="form_signin" action="javascript:void(0)">
             <div class="head_form">
@@ -28,8 +19,8 @@
             </div>
             <div class="body_form">
                 <div class="email_user">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" placeholder="abc@gmail.com" required>
+                    <label for="email">UserName or Email</label>
+                    <input name="loginKey" id="loginKey" placeholder="abc@gmail.com" required>
                     <span></span>
                 </div>
                 <div class="password_field">
@@ -40,52 +31,9 @@
             </div>
             <div class="foot_form">
                 <button id="btn" type="submit">logn in</button>
-                <p>You don't have an account. <a href="signin.html"><span class="sign">sign in</span></a></p>
+                <p>You don't have an account. <a href="signup.html"><span class="sign">sign up</span></a></p>
             </div>
         </form>
     </div>
-
-<script>
-    const loginForm = document.getElementById("loginForm");
-
-    loginForm.addEventListener('submit', (event) => {
-        event.preventDefault(); 
-
-        const username = document.getElementById('username').value;
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
-        const data = {
-            username: username,
-            password: password
-        };
-
-        fetch('/req/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(async response => {
-            if (response.ok) {
-                // Lưu tên user vào bộ nhớ trình duyệt để trang index có thể lấy ra dùng
-                sessionStorage.setItem("currentUser", username);
-                
-                alert("Đăng nhập thành công! Đang chuyển hướng...");
-                
-                // Chuyển hướng sang trang index (localhost:8080/)
-                window.location.href = "/"; 
-            } else {
-                const errorMsg = await response.text();
-                alert("Thất bại: " + (errorMsg || "Sai tài khoản hoặc mật khẩu!"));
-            }
-        })
-        .catch(error => {
-            console.error("Lỗi:", error);
-            alert("Không thể kết nối tới Server!");
-        });
-    });
-</script>
 </body>
 </html>
