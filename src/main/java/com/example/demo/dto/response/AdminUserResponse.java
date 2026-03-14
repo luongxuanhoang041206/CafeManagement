@@ -6,14 +6,14 @@ import lombok.Data;
 @Data
 public class AdminUserResponse  {
 	
-	private String id;
+	private Long id;
 	private String name;
 	private String password;
 	private String email;
 	private boolean active;
 	private Date created_at;
 	
-	public AdminUserResponse(String id, String name, String password, String email, boolean active, Date created_at) {
+	public AdminUserResponse(Long id, String name, String password, String email, boolean active, Date created_at) {
 		super();
 		this.id = id;
 		this.name = name;

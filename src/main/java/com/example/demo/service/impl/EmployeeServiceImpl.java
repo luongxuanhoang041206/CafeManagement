@@ -48,7 +48,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public AdminEmployeeResponse create(CreateEmployeeRequest request) {
 		EmployeeEntity employee = new EmployeeEntity();
-		employee.setId(request.getId());
+	//	employee.setId(request.getId());
 		employee.setName(request.getName());
 		employee.setPosition(request.getPosition());
 		employee.setPhone(request.getPhone());
@@ -59,14 +59,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 	// xoa employee
 	@Override
-	public void deleteEmployee(String id) {
+	public void deleteEmployee(Long id) {
 		EmployeeEntity employee = repo.findById(id)
 				.orElseThrow(() -> new RuntimeException("Employee not found"));;
 		repo.deleteById(id);
 	}
 	// cap nhat employee
 	@Override
-	public AdminEmployeeResponse update(UpdateEmployeeRequest request, String id) {
+	public AdminEmployeeResponse update(UpdateEmployeeRequest request, Long id) {
 		EmployeeEntity employee = repo.findById(id)
 				.orElseThrow(() -> new RuntimeException("Not found"));
 		if(request.getName() != null) {
@@ -82,7 +82,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 	// Chi tiet employee
 	@Override
-	public AdminEmployeeResponse detail(String id) {
+	public AdminEmployeeResponse detail(Long id) {
 		EmployeeEntity employee = repo.findById(id)
 				.orElseThrow(() -> new RuntimeException("Not found"));
 		return mapper.toAdmin(employee);

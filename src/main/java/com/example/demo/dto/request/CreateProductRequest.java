@@ -8,5 +8,5 @@ public class CreateProductRequest {
     private String name;
     private Double price;
     private Boolean active;
-    private String groupId;
+    private Long groupId;
 }

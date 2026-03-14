@@ -32,12 +32,12 @@ public class AdminUserController  {
 	}
 	// Doi trang thai user
 	@PatchMapping("/{id}/active")
-	public void changeActive(@PathVariable String id) {
+	public void changeActive(@PathVariable Long id) {
 		service.changeActive(id);
 	}
 	// Xoa user
 	@DeleteMapping("/{id}/delete")
-	public void deleteUser(@PathVariable String id) {
+	public void deleteUser(@PathVariable Long id) {
 		service.deleteUser(id);
 	}
 }

@@ -9,7 +9,7 @@ public class ProductSpecification {
             Double minPrice,
             Double maxPrice,
             Boolean active,
-            String groupId
+            Long groupId
     ) {
         return (root, query, cb) -> {
             ArrayList<Predicate> predicates = new ArrayList<>();
