@@ -3,6 +3,9 @@ package com.example.demo.service.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.response.AdminUserResponse;
@@ -11,6 +14,8 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import com.example.demo.specification.UserSpecification;
 import com.example.demo.entity.UserEntity;
+
+import java.util.Optional; 
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -43,5 +48,22 @@ public class UserServiceImpl implements UserService {
 				.orElseThrow(() -> new RuntimeException("Not found"));
 		
 		repo.deleteById(id);
+	}
+
+	//phan login
+	@Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<UserEntity> user = repo.findByName(username);
+        if(user.isPresent()) {
+            var userObj = user.get();
+            return User.builder()
+                .username(userObj.getName())
+                .password(userObj.getPassword())
+                .roles("USER")
+                .build();
+        }
+        else{
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
 	}
 }
