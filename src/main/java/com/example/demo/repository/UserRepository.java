@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -12,4 +13,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>,
 											JpaSpecificationExecutor<UserEntity>
 {
 	List<UserEntity> findByNameContainingIgnoreCase(String name);
+
+	Optional<UserEntity> findByUsername(String username);
 }
