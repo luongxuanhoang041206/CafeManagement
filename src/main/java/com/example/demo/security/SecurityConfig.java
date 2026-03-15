@@ -91,6 +91,7 @@ public class SecurityConfig {
         return userService;
     }
 
+<<<<<<< HEAD
     public SecurityConfig(UserService userService) {
         this.userService = userService;
     }
@@ -104,6 +105,14 @@ public class SecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+=======
+        http
+            .cors(Customizer.withDefaults())   
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().permitAll()
+            );
+>>>>>>> feature/order-api
 
 
 

@@ -45,19 +45,19 @@ public class AdminEmployeeController  {
 	}
 	// Xoa employee
 	@DeleteMapping("/{id}")
-	public String deleteProduct(@PathVariable String id) {
+	public String deleteProduct(@PathVariable Long id) {
 		service.deleteEmployee(id);
 		return "Deleted successfully";
 	}
 	// Cap nhat employee
 	@PatchMapping("/{id}")
 	public AdminEmployeeResponse update(@RequestBody UpdateEmployeeRequest request,
-			@PathVariable String id) {
+			@PathVariable Long id) {
 		return service.update(request, id);
 	} 
 	// Xem chi tiet employee
 	@GetMapping("/{id}")
-	public AdminEmployeeResponse detail(@PathVariable String id) {
+	public AdminEmployeeResponse detail(@PathVariable Long id) {
 		return service.detail(id);
 	}
 } 

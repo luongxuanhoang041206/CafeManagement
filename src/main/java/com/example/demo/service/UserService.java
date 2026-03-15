@@ -9,6 +9,6 @@ import com.example.demo.dto.response.AdminUserResponse;
 
 public interface UserService extends UserDetailsService  {
 	Page<AdminUserResponse> search(String name, Pageable pageable);
-	void changeActive(String id);
-	void deleteUser(String id);
+	void changeActive(Long id);
+	void deleteUser(Long id);
 }

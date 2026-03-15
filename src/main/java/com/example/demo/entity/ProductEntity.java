@@ -18,7 +18,7 @@ public class ProductEntity {
     
     private String name;
     private double price;
-    private String groupId;
+    private Long groupId;
     private Boolean deleted;
     private Boolean active;
     @CreationTimestamp

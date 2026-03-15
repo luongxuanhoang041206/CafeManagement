@@ -9,7 +9,7 @@ import lombok.Data;
 public class EmployeeEntity {
 
     @Id
-    private String id;
+    private Long id;
 
     private String name;
     private String position;

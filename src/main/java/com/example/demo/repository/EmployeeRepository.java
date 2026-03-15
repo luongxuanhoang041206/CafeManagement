@@ -7,8 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import com.example.demo.entity.EmployeeEntity;
 
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-public interface EmployeeRepository extends JpaRepository<EmployeeEntity, String>,
+public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long>,
 											JpaSpecificationExecutor<EmployeeEntity>
 {
 	List<EmployeeEntity> findByNameContainingIgnoreCase(String name);
