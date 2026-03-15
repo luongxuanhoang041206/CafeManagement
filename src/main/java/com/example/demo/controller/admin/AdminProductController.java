@@ -27,7 +27,7 @@ public class AdminProductController {
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) Boolean active,
-            @RequestParam(required = false) String groupId,
+            @RequestParam(required = false) Integer groupId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size,
             @RequestParam(defaultValue = "id") String sortBy,

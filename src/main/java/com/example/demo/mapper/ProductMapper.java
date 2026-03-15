@@ -11,7 +11,8 @@ public class ProductMapper {
     public ProductResponse toClient(ProductEntity p) {
         return new ProductResponse(
                 p.getName(),
-                p.getPrice()
+                p.getPrice(),
+                p.getGroupId()
         );
     }
 

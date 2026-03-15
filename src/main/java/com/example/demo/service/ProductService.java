@@ -13,8 +13,17 @@ import com.example.demo.dto.response.ProductResponse;
 public interface ProductService {
 
     List<ProductResponse> getAllForClient();
+	//For client
+	Page<ProductResponse> searchForClient(
+			String name,
+			Double minPrice,
+			Double maxPrice,
+			Integer groupId,
+			int page,
+			int size
+	);
     List<AdminProductResponse> getAllForAdmin();
-    //List<AdminProductResponse> search(String name, Double minPrice, Double maxPrice, Boolean actice, String group_id);
+    //List<AdminProductResponse> search(String name, Double minPrice, Double maxPrice, Boolean actice, Interger group_id);
 	List<AdminProductResponse> getAll();
 	
 	// pagination 
@@ -23,7 +32,7 @@ public interface ProductService {
             Double minPrice,
             Double maxPrice,
             Boolean active,
-            String groupId,
+            Integer groupId,
             int page,
             int size
     );
@@ -33,6 +42,7 @@ public interface ProductService {
 	void deleteProduct(Long id);
 	AdminProductResponse update(UpdateProductRequest request, Long id);
 	AdminProductResponse detail(Long id);
-	Page<AdminProductResponse> search(String name, Double minPrice, Double maxPrice, Boolean active, String groupId,
+	Page<AdminProductResponse> search(String name, Double minPrice, Double maxPrice, Boolean active, Integer groupId,
 			Pageable pageable);
+
 }

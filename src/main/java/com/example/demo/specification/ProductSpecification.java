@@ -9,7 +9,7 @@ public class ProductSpecification {
             Double minPrice,
             Double maxPrice,
             Boolean active,
-            String groupId
+            Integer groupId
     ) {
         return (root, query, cb) -> {
             ArrayList<Predicate> predicates = new ArrayList<>();
@@ -36,7 +36,7 @@ public class ProductSpecification {
             }
             if (groupId != null) {
                 predicates.add(
-                    cb.equal(root.get("group").get("id"), groupId)
+                    cb.equal(root.get("groupId"), groupId)
                 );
             }
             return cb.and(predicates.toArray(new Predicate[0]));

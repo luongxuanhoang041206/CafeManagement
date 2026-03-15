@@ -6,10 +6,10 @@ public class AdminProductResponse {
     private String name;
     private double price;
     private boolean active;
-    private String groupId;
+    private Integer groupId;
 
     public AdminProductResponse(Long id, String name,
-                                double price, boolean active, String groupId) {
+                                double price, boolean active, Integer groupId) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -21,5 +21,5 @@ public class AdminProductResponse {
     public String getName() { return name; }
     public double getPrice() { return price; }
     public boolean getActive() { return active; }
-    public String getGroupid() { return groupId; }
+    public Integer getGroupid() { return groupId; }
 }

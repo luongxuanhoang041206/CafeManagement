@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
             Double minPrice,
             Double maxPrice,
             Boolean active,
-            String groupId,
+            Integer groupId,
             Pageable pageable  
     ) {
 
@@ -166,9 +166,28 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Page<AdminProductResponse> search(String name, Double minPrice, Double maxPrice, Boolean active,
-			String groupId, int page, int size) {
+			Integer groupId, int page, int size) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-    
+    // Lọc sản phẩm cho client
+    @Override
+    public Page<ProductResponse> searchForClient(
+            String name,
+            Double minPrice,
+            Double maxPrice,
+            Integer groupId,
+            int page,
+            int size
+    ) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Specification<ProductEntity> spec =
+                ProductSpecification.filter(name, minPrice, maxPrice, true, groupId);
+
+        Page<ProductEntity> productPage = repo.findAll(spec, pageable);
+
+        return productPage.map(mapper::toClient);
+    }
 }
