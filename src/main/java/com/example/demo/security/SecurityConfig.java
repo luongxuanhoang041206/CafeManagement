@@ -64,7 +64,6 @@ import com.example.demo.service.UserService;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 
 @Configuration
 @EnableMethodSecurity
@@ -91,7 +90,6 @@ public class SecurityConfig {
         return userService;
     }
 
-<<<<<<< HEAD
     public SecurityConfig(UserService userService) {
         this.userService = userService;
     }
@@ -105,14 +103,6 @@ public class SecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
-=======
-        http
-            .cors(Customizer.withDefaults())   
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()
-            );
->>>>>>> feature/order-api
 
 
 

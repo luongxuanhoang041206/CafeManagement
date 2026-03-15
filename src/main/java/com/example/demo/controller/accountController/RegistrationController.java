@@ -22,10 +22,6 @@ public class RegistrationController {
     @PostMapping(value = "/req/signup", consumes = "application/json", produces = "application/json")
     public UserEntity createUser(@RequestBody RegistrationRequest request) {
         UserEntity user = new UserEntity();
-        // Tạo ID ngẫu nhiên cho người dùng mới
-        String randomId = java.util.UUID.randomUUID().toString();
-        user.setId(randomId);
-        
         user.setName(request.username); 
         user.setEmail(request.email);
         user.setPassword(passwordEncoder.encode(request.password));
