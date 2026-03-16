@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.dto.request.LoginAdminRequest;
 
+@RestController
+@RequestMapping("/admin")
 public class AuthController  {
 	@Autowired
     private AuthenticationManager authenticationManager;

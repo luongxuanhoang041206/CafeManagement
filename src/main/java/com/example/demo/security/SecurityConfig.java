@@ -29,10 +29,13 @@ package com.example.demo.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
@@ -48,56 +51,58 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomEmployeeDetailService customEmployeeDetailService;
+    private final CustomUserDetailsService userService;
 
-    public SecurityConfig(CustomEmployeeDetailService customEmployeeDetailService) {
+    public SecurityConfig(CustomEmployeeDetailService customEmployeeDetailService,
+                          CustomUserDetailsService userService) {
         this.customEmployeeDetailService = customEmployeeDetailService;
+        this.userService = userService;
     }
 
-    // UserDetailsService dùng để load user khi login
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return customEmployeeDetailService;
-    }
-
-    // mã hóa password
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // provider xử lý login
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationManager authenticationManager(PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider employeeProvider = new DaoAuthenticationProvider(customEmployeeDetailService);
+        employeeProvider.setPasswordEncoder(passwordEncoder);
 
-        DaoAuthenticationProvider provider =
-                new DaoAuthenticationProvider(customEmployeeDetailService);
+        DaoAuthenticationProvider userProvider = new DaoAuthenticationProvider(userService);
+        userProvider.setPasswordEncoder(passwordEncoder);
 
-        provider.setPasswordEncoder(passwordEncoder());
-
-        return provider;
+        return new ProviderManager(employeeProvider, userProvider);
     }
 
-    // cấu hình security
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-        	.cors(Customizer.withDefaults())   
+            .cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
 
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/admin/login").permitAll()
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .anyRequest().authenticated()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers(
+                    "/products/**",
+                    "/auth/login",
+                    "/auth/register",
+                    "/admin/login"
+                ).permitAll()
+                .requestMatchers("/orders/**").hasRole("USER")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
             )
-
-//            .formLogin(form -> form
-//                    .loginProcessingUrl("/login")
-//                    .permitAll()
-//            )
-
-            .authenticationProvider(authenticationProvider());
+           // .formLogin(form -> form.disable());
+            .formLogin(Customizer.withDefaults());
+          //  .authenticationProvider(authenticationProvider())
+         //   .authenticationProvider(userAuthProvider());
 
         return http.build();
     }
+
+	
+
+	
 }

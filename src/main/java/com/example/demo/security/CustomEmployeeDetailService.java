@@ -14,10 +14,6 @@ public class CustomEmployeeDetailService implements UserDetailsService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {

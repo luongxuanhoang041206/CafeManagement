@@ -17,6 +17,20 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.userRepo = userRepo;
     }
 
+//    @Override
+//    public UserDetails loadUserByUsername(String username)
+//            throws UsernameNotFoundException {
+//
+//        UserEntity user = userRepo.findByUsername(username)
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getName(),
+//                user.getPassword(),
+//                .roles("USER"),
+//                new ArrayList<>()
+//        );
+//    }}
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
@@ -24,9 +38,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         UserEntity user = userRepo.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getName(),
-                user.getPassword(),
-                new ArrayList<>()
-        );
-    }}
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .roles("USER")
+                .build();
+    }
+}
