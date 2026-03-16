@@ -77,51 +77,102 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public OrderResponse create(CreateOrderRequest request) {
+        if("WEB".equalsIgnoreCase(request.getOrderSource())){
+            //muaonline
+            //  create order
+            OrderEntity order = new OrderEntity();
+            order.setOrderSource(request.getOrderSource());
+            order.setTableId(request.getTableId());
+            order.setUserId(request.getUserId());
+            order.setEmployeeId(request.getEmployeeId());
+            order.setStatus(request.getStatus());
+            order.setTotalAmount(request.getTotalAmount());
 
-        //  create order
-        OrderEntity order = new OrderEntity();
-        order.setOrderSource(request.getOrderSource());
-        order.setTableId(request.getTableId());
-        order.setUserId(request.getUserId());
-        order.setEmployeeId(request.getEmployeeId());
-        order.setStatus(request.getStatus());
-        order.setTotalAmount(request.getTotalAmount());
+            if (request.getCreated_at() != null) {
+                order.setCreatedAt(
+                        request.getCreated_at().toInstant()
+                                .atZone(java.time.ZoneId.systemDefault())
+                                .toLocalDateTime()
+                );
+            }
+            else {
+                order.setCreatedAt(LocalDateTime.now());
+            }
+        
+            OrderEntity savedOrder = repo.save(order);
 
-        if (request.getCreated_at() != null) {
-            order.setCreatedAt(
-                    request.getCreated_at().toInstant()
-                            .atZone(java.time.ZoneId.systemDefault())
-                            .toLocalDateTime()
-            );
-        } else {
-            order.setCreatedAt(LocalDateTime.now());
+            if (request.getItems() != null) {
+                for(CreateOrderItemRequest item : request.getItems()) {
+                    OrderItemEntity orderItem = new OrderItemEntity();
+                    orderItem.setOrderId(savedOrder.getId());
+                    orderItem.setProductId(item.getProductId());
+                    orderItem.setQuantity(item.getQuantity());
+                    orderItem.setPrice(item.getPrice());
+
+                    orderItemRepository.save(orderItem);
+                }
+            }
+            else throw new RuntimeException("Phai co it nhat 1 san pham");
+
+            PaymentEntity payment = new PaymentEntity();
+            payment.setOrderId(savedOrder.getId());
+            payment.setMethod(request.getPaymentMethod());
+            payment.setAmount(savedOrder.getTotalAmount());
+            payment.setStatus("PAID");
+            payment.setPaidAt(LocalDateTime.now());
+
+            paymentRepository.save(payment);
+
+            return mapper.toClient(savedOrder);
         }
+        else{
+            //muaoffline
+            //  create order
+            OrderEntity order = new OrderEntity();
+            order.setOrderSource(request.getOrderSource());
+            order.setTableId(request.getTableId());
+            order.setUserId(request.getUserId());
+            order.setEmployeeId(request.getEmployeeId());
+            order.setStatus(request.getStatus());
+            order.setTotalAmount(request.getTotalAmount());
 
-        OrderEntity savedOrder = repo.save(order);
-        if (request.getItems() != null) {
-	        for (CreateOrderItemRequest item : request.getItems()) {
-	
-	            OrderItemEntity orderItem = new OrderItemEntity();
-	            orderItem.setOrderId(savedOrder.getId());
-	            orderItem.setProductId(item.getProductId());
-	            orderItem.setQuantity(item.getQuantity());
-	            orderItem.setPrice(item.getPrice());
-	
-	            orderItemRepository.save(orderItem);
-	        }
-        } else {
-        	throw new RuntimeException("Order must contain at least one item");
+            if (request.getCreated_at() != null) {
+                order.setCreatedAt(
+                        request.getCreated_at().toInstant()
+                                .atZone(java.time.ZoneId.systemDefault())
+                                .toLocalDateTime()
+                );
+            } 
+            else {
+                order.setCreatedAt(LocalDateTime.now());
+            }
+
+            OrderEntity savedOrder = repo.save(order);
+            if (request.getItems() != null) {
+                for (CreateOrderItemRequest item : request.getItems()) {
+        
+                    OrderItemEntity orderItem = new OrderItemEntity();
+                    orderItem.setOrderId(savedOrder.getId());
+                    orderItem.setProductId(item.getProductId());
+                    orderItem.setQuantity(item.getQuantity());
+                    orderItem.setPrice(item.getPrice());
+        
+                    orderItemRepository.save(orderItem);
+                }
+            } else {
+                throw new RuntimeException("Order must contain at least one item");
+            }
+
+            PaymentEntity payment = new PaymentEntity();
+            payment.setOrderId(savedOrder.getId());
+            payment.setMethod(request.getPaymentMethod());
+            payment.setAmount(savedOrder.getTotalAmount());
+            payment.setStatus("PAID");
+            payment.setPaidAt(LocalDateTime.now());
+
+            paymentRepository.save(payment);
+
+            return mapper.toClient(savedOrder);
         }
-
-        PaymentEntity payment = new PaymentEntity();
-        payment.setOrderId(savedOrder.getId());
-        payment.setMethod(request.getPaymentMethod());
-        payment.setAmount(savedOrder.getTotalAmount());
-        payment.setStatus("PAID");
-        payment.setPaidAt(LocalDateTime.now());
-
-        paymentRepository.save(payment);
-
-        return mapper.toClient(savedOrder);
     }
 }
