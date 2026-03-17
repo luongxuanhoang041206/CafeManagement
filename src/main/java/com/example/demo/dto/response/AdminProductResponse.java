@@ -1,25 +1,22 @@
 package com.example.demo.dto.response;
 
+import lombok.Data;
+
+@Data
 public class AdminProductResponse {
 
-    private String id;
+    private Long id;
     private String name;
     private double price;
     private boolean active;
-    private String groupId;
+    private Long groupId;
 
-    public AdminProductResponse(String id, String name,
-                                double price, boolean active, String groupId) {
+    public AdminProductResponse(Long id, String name,
+                                double price, boolean active, Long groupId) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.active = active;
         this.groupId = groupId;
     }
-
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public double getPrice() { return price; }
-    public boolean getActive() { return active; }
-    public String getGroupid() { return groupId; }
 }
