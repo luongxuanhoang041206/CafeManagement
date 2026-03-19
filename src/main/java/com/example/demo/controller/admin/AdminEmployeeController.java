@@ -2,6 +2,7 @@ package com.example.demo.controller.admin;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.dto.request.CreateEmployeeRequest;
 import com.example.demo.dto.request.UpdateEmployeeRequest;
@@ -39,10 +40,15 @@ public class AdminEmployeeController  {
 		return service.search(name, pageable);
 	}
 	// tao moi employee
+//	@PostMapping
+//	public AdminEmployeeResponse create(@RequestBody CreateEmployeeRequest request) {
+//		return service.create(request);
+//	}
 	@PostMapping
-	public AdminEmployeeResponse create(@RequestBody CreateEmployeeRequest request) {
-		return service.create(request);
-	}
+    @PreAuthorize("hasRole('ADMIN')")
+    public AdminEmployeeResponse create(@RequestBody CreateEmployeeRequest request) {
+         return service.create(request);
+    }
 	// Xoa employee
 	@DeleteMapping("/{id}")
 	public String deleteProduct(@PathVariable Long id) {

@@ -53,23 +53,6 @@ public class ProductServiceImpl implements ProductService {
                    .map(mapper::toAdmin)
                    .toList();
     }
-//    @Override
-//    public List<AdminProductResponse> search(
-//            String name,
-//            Double minPrice,
-//            Double maxPrice,
-//            Boolean active,
-//            String groupId
-//    ) {
-//
-//        Specification<ProductEntity> spec =
-//                ProductSpecification.filter(name, minPrice, maxPrice, active, groupId);
-//
-//        return repo.findAll(spec)
-//                   .stream()
-//                   .map(mapper::toAdmin)
-//                   .toList();
-//    }
     @Override
     public Page<AdminProductResponse> search(
             String name,
@@ -163,5 +146,23 @@ public class ProductServiceImpl implements ProductService {
     			.orElseThrow(() -> new RuntimeException("Not found"));
     	return mapper.toAdmin(product);
     }
-    
+    @Override
+    public Page<ProductResponse> searchForClient(
+            String name,
+            Double minPrice,
+            Double maxPrice,
+            Long groupId,
+            int page,
+            int size
+    ) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Specification<ProductEntity> spec =
+                ProductSpecification.filter(name, minPrice, maxPrice, true, groupId);
+
+        Page<ProductEntity> productPage = repo.findAll(spec, pageable);
+
+        return productPage.map(mapper::toClient);
+    }
 }
