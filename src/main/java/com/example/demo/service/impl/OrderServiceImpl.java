@@ -1,6 +1,8 @@
 package com.example.demo.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,11 +17,13 @@ import com.example.demo.dto.response.OrderResponse;
 import com.example.demo.entity.OrderEntity;
 import com.example.demo.entity.OrderItemEntity;
 import com.example.demo.entity.PaymentEntity;
+import com.example.demo.entity.ProductEntity;
 import com.example.demo.mapper.OrderMapperToAdmin;
 import com.example.demo.mapper.OrderMapperToClient;
 import com.example.demo.repository.OrderItemRepository;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.PaymentRepository;
+import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.OrderService;
 import com.example.demo.specification.OrderSpecification;
 
@@ -28,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository repo;
     private final OrderItemRepository orderItemRepository;
+    private ProductRepository productRepository;
     private final PaymentRepository paymentRepository;
     private final OrderMapperToClient mapper;
 	private final OrderMapperToAdmin mapperAdmin;
@@ -86,7 +91,6 @@ public class OrderServiceImpl implements OrderService {
             order.setUserId(request.getUserId());
             order.setEmployeeId(request.getEmployeeId());
             order.setStatus(request.getStatus());
-            order.setTotalAmount(request.getTotalAmount());
 
             if (request.getCreated_at() != null) {
                 order.setCreatedAt(
@@ -98,6 +102,34 @@ public class OrderServiceImpl implements OrderService {
             else {
                 order.setCreatedAt(LocalDateTime.now());
             }
+
+            long calculatedTotal = 0;
+            List<OrderItemEntity> orderItems = new ArrayList<>();
+
+            for (CreateOrderItemRequest item : request.getItems()) {
+                // kiem tra con mon khong
+                ProductEntity product = productRepository.findByIdAndActiveTrue(item.getProductId())
+                    .orElseThrow(() -> new RuntimeException("mon nay da het hang hoac khong ton tai " + item.getProductId()));
+
+                // check so luong
+                if (item.getQuantity() <= 0) {
+                    throw new RuntimeException("so luong khong duoc nho hon 1");
+                }
+
+                // Tinh gia
+                Long itemPrice = product.getPrice();
+                calculatedTotal += itemPrice * item.getQuantity();
+
+                // chuan bi de luu
+                OrderItemEntity orderItem = new OrderItemEntity();
+                orderItem.setProductId(item.getProductId());
+                orderItem.setQuantity(item.getQuantity());
+                orderItem.setPrice((Long) itemPrice); 
+                orderItems.add(orderItem);
+            }
+
+            //gan tong tien de luu
+            order.setTotalAmount(calculatedTotal);
         
             OrderEntity savedOrder = repo.save(order);
 

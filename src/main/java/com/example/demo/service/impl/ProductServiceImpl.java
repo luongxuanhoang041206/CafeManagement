@@ -77,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity product = new ProductEntity();
        // product.setId(request.getId());
         product.setName(request.getName());
-        product.setPrice(request.getPrice());
+        product.setPrice(request.getPrice().longValue()); //tam thoi ep kieu de test
         product.setActive(request.getActive());
         product.setGroupId(request.getGroupId());
         product.setCreatedAt(new Date());  
@@ -119,7 +119,7 @@ public class ProductServiceImpl implements ProductService {
             if (request.getPrice() <= 0) {
                 throw new RuntimeException("Giá phải > 0");
             }
-            product.setPrice(request.getPrice());
+            product.setPrice(request.getPrice().longValue()); //tam thoi ep kieu de test
         }
 
         // update active nếu khác null

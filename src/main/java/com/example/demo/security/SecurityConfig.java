@@ -45,28 +45,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.example.demo.service.UserService;
 
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-    //cau hinh co ban, tat cors, tat csrf, cho phep tat ca request ma khong can xac thuc(ban can xac thuc o duoi)
-    // @Bean
-    // public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-    //     http
-    //         .cors(Customizer.withDefaults())   // 🔥 QUAN TRỌNG
-    //         .csrf(csrf -> csrf.disable())
-    //         .authorizeHttpRequests(auth -> auth
-    //             .anyRequest().permitAll()
-    //         );
-
-    //     return http.build();
-    // }
-
-    //phuc vu cho login, signup
-    private final UserService userService;
 
     private final CustomEmployeeDetailService customEmployeeDetailService;
     private final CustomUserDetailsService userService;
@@ -78,47 +59,59 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return userService;
-    }
-
-    public SecurityConfig(UserService userService) {
-        this.userService = userService;
-    }
-    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
-
-
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                .csrf(csrf -> csrf.disable()) 
+    public AuthenticationManager authenticationManager(PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider employeeProvider = new DaoAuthenticationProvider(customEmployeeDetailService);
+        employeeProvider.setPasswordEncoder(passwordEncoder);
 
-                .authorizeHttpRequests(registry -> {
-                    registry.requestMatchers("/req/login", "/req/signup", "/css/**", "/js/**","/index", "/image/**" ,"/").permitAll();
-                    registry.anyRequest().authenticated();
-                })
+        DaoAuthenticationProvider userProvider = new DaoAuthenticationProvider(userService);
+        userProvider.setPasswordEncoder(passwordEncoder);
 
-                .formLogin(httpForm -> {
-                    httpForm
-                        .loginPage("/req/login")
-                        .permitAll();
-                    httpForm
-                        .defaultSuccessUrl("/index", true);
-                })
-                .build();
+        return new ProviderManager(employeeProvider, userProvider);
     }
 
-	
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+        http
+            .cors(Customizer.withDefaults())
+            .csrf(csrf -> csrf.disable())
+
+            .authorizeHttpRequests(auth -> auth
+            	    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            	    .requestMatchers(
+            	        "/products/**",
+            	        "/admin/**",
+            	        "/auth/login",
+            	        "/auth/register",
+            	        "/admin/login",
+            	        "/admin/orders",
+            	        "/v3/api-docs/**"
+            	    ).permitAll()
+            	    .requestMatchers(HttpMethod.GET, "/admin/products/**")
+                    	.hasAuthority("PRODUCT_VIEW")
+
+	                .requestMatchers(HttpMethod.POST, "/admin/products/**")
+	                    .hasAuthority("PRODUCT_CREATE")
 	
+	                .requestMatchers(HttpMethod.PUT, "/admin/products/**")
+	                    .hasAuthority("PRODUCT_UPDATE")
+	
+	                .requestMatchers(HttpMethod.DELETE, "/admin/products/**")
+	                    .hasAuthority("PRODUCT_DELETE")
+	                    
+            	    .requestMatchers("/orders/**").hasRole("USER")
+            	    .requestMatchers("/admin/**").hasRole("ADMIN")
+            	    .anyRequest().authenticated()
+            	)
+            	.formLogin(form -> form.disable()); // tắt formLogin đi
+          //  .authenticationProvider(authenticationProvider())
+         //   .authenticationProvider(userAuthProvider());
+
+        return http.build();
+    }
 }

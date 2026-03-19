@@ -17,7 +17,7 @@ public class ProductEntity {
     private Long id;
     
     private String name;
-    private double price;
+    private Long price;
     private Long groupId;
     private Boolean deleted;
     private Boolean active;

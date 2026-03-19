@@ -17,4 +17,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>,
 	
 	//phuc vu login
 	Optional<UserEntity> findByNameOrEmail(String name, String email);
+	Optional<UserEntity> findByUsername(String name);
 }

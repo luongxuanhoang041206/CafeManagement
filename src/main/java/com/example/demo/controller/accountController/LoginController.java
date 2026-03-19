@@ -21,15 +21,14 @@ public class LoginController {
 
     @PostMapping("/req/login")
     public ResponseEntity<String> loginUser(@RequestBody LoginRequest loginRequest) {
-        return userRepository.findByNameOrEmail(loginRequest.username, loginRequest.username)
+        return userRepository.findByNameOrEmail(loginRequest.getUsername(), loginRequest.getUsername())
             .map(user -> {
-                if (passwordEncoder.matches(loginRequest.password, user.getPassword())) {
-                    return ResponseEntity.ok("Đăng nhập thành công!");
+                if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+                    return ResponseEntity.ok("Dang nhap thanh cong");
                 } else {
-                    return ResponseEntity.status(401).body("Sai mật khẩu!");
+                    return ResponseEntity.status(401).body("sai mat khau");
                 }
             })
-            .orElse(ResponseEntity.status(401).body("Không tìm thấy người dùng!"));
+            .orElse(ResponseEntity.status(401).body("khong tim thay ng dung"));
     }
-    
 }

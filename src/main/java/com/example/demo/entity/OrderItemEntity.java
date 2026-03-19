@@ -20,5 +20,5 @@ public class OrderItemEntity {
 
     private Integer quantity;
 
-    private Integer price;
+    private Long price;
 }
