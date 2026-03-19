@@ -25,7 +25,7 @@ public class CustomEmployeeDetailService implements UserDetailsService {
         return User.builder()
                 .username(employee.getName())
                 .password(employee.getPassword())
-                .roles(employee.getRole().name())
+                .authorities(employee.getRole().name())
                 .build();
     }
 }

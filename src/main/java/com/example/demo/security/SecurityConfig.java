@@ -83,19 +83,33 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
 
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers(
-                    "/products/**",
-                    "/auth/login",
-                    "/auth/register",
-                    "/admin/login"
-                ).permitAll()
-                .requestMatchers("/orders/**").hasRole("USER")
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-            )
-           // .formLogin(form -> form.disable());
-            .formLogin(Customizer.withDefaults());
+            	    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            	    .requestMatchers(
+            	        "/products/**",
+            	        "/admin/**",
+            	        "/auth/login",
+            	        "/auth/register",
+            	        "/admin/login",
+            	        "/admin/orders",
+            	        "/v3/api-docs/**"
+            	    ).permitAll()
+            	    .requestMatchers(HttpMethod.GET, "/admin/products/**")
+                    	.hasAuthority("PRODUCT_VIEW")
+
+	                .requestMatchers(HttpMethod.POST, "/admin/products/**")
+	                    .hasAuthority("PRODUCT_CREATE")
+	
+	                .requestMatchers(HttpMethod.PUT, "/admin/products/**")
+	                    .hasAuthority("PRODUCT_UPDATE")
+	
+	                .requestMatchers(HttpMethod.DELETE, "/admin/products/**")
+	                    .hasAuthority("PRODUCT_DELETE")
+	                    
+            	    .requestMatchers("/orders/**").hasRole("USER")
+            	    .requestMatchers("/admin/**").hasRole("ADMIN")
+            	    .anyRequest().authenticated()
+            	)
+            	.formLogin(form -> form.disable()); // tắt formLogin đi
           //  .authenticationProvider(authenticationProvider())
          //   .authenticationProvider(userAuthProvider());
 

@@ -76,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public OrderResponse create(CreateOrderRequest request) {
+    public AdminOrderResponse create(CreateOrderRequest request) {
 
         //  create order
         OrderEntity order = new OrderEntity();
@@ -122,6 +122,26 @@ public class OrderServiceImpl implements OrderService {
 
         paymentRepository.save(payment);
 
-        return mapper.toClient(savedOrder);
+        return mapperAdmin.toAdmin(savedOrder);
     }
+    
+    // xem chi tiet
+    public AdminOrderResponse detail(Long id) {
+    	OrderEntity order = repo.findById(id)
+    			.orElseThrow(() -> new RuntimeException("Not found"));
+    	return mapperAdmin.toAdmin(order);	
+    }
+    // sua trang thai
+    public AdminOrderResponse updateStatus(Long id, String status) {
+        OrderEntity order = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        order.setStatus(status);
+        order.setCreatedAt(LocalDateTime.now());
+
+        OrderEntity updatedOrder = repo.save(order);
+        return mapperAdmin.toAdmin(updatedOrder);
+    }
+    
+    
 }

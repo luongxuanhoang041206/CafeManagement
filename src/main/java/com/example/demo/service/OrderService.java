@@ -10,7 +10,7 @@ import com.example.demo.dto.response.AdminOrderResponse;
 import com.example.demo.dto.response.OrderResponse;
 
 public interface OrderService {
-	OrderResponse create(CreateOrderRequest request);
+	AdminOrderResponse create(CreateOrderRequest request);
 	Page<AdminOrderResponse> search(
 	        LocalDateTime fromDate,
 	        LocalDateTime toDate,
@@ -22,4 +22,6 @@ public interface OrderService {
 	        String status,
 	        Pageable pageable
 	);
+	AdminOrderResponse detail(Long id);
+	AdminOrderResponse updateStatus(Long id, String status);
 }

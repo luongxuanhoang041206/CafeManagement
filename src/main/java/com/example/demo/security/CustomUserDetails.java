@@ -2,10 +2,14 @@ package com.example.demo.security;
 
 import com.example.demo.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import com.example.demo.entity.Role;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -14,6 +18,7 @@ public class CustomUserDetails implements UserDetails {
 	 */
 	private static final long serialVersionUID = 6367717387432669985L;
 	private UserEntity user;
+	private Role role;
 
     public CustomUserDetails(UserEntity user) {
         this.user = user;
@@ -21,7 +26,16 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList(); 
+
+        Set<GrantedAuthority> authorities = new HashSet<>();
+
+        authorities.add(new SimpleGrantedAuthority(role.name()));
+
+        role.getPermissions().forEach(permission ->
+            authorities.add(new SimpleGrantedAuthority(permission.name()))
+        );
+
+        return authorities;
     }
 
     @Override

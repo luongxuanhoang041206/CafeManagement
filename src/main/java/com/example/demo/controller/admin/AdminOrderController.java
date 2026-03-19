@@ -8,12 +8,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.request.CreateOrderRequest;
+import com.example.demo.dto.request.UpdateOrderStatusRequest;
 import com.example.demo.dto.response.AdminOrderResponse;
 import com.example.demo.dto.response.OrderResponse;
 import com.example.demo.service.OrderService;
@@ -65,7 +68,20 @@ public class AdminOrderController  {
 	}
 	// tao moi 1 order 
 	@PostMapping
-	public OrderResponse create(@RequestBody CreateOrderRequest request) {
-		return service.create(request); // dieu huong sang /checkout/success la do fe
-	} // chuyen sang client
+	public AdminOrderResponse create(@RequestBody CreateOrderRequest request) {
+		return service.create(request); 
+	}
+	// xem chi tiet 1 order
+	@GetMapping("/{id}")
+	public AdminOrderResponse detail(@PathVariable Long id ) {
+		return service.detail(id);
+	}
+	// Thay doi trang thai 1 order
+	@PatchMapping("/{id}/status")
+    public AdminOrderResponse updateStatus(
+            @PathVariable Long id,
+            @RequestBody UpdateOrderStatusRequest request
+    ) {
+        return service.updateStatus(id, request.getStatus());
+    }
 }
