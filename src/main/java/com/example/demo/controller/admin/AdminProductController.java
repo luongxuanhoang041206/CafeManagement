@@ -10,7 +10,7 @@ import com.example.demo.dto.request.UpdateProductRequest;
 import com.example.demo.dto.response.AdminProductResponse;
 import com.example.demo.service.ProductService;
 import org.springframework.data.domain.Pageable;
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 @RequestMapping("/admin/products")
 public class AdminProductController {

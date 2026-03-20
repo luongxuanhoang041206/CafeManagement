@@ -10,6 +10,7 @@ public class ProductMapper {
 
     public ProductResponse toClient(ProductEntity p) {
         return new ProductResponse(
+                p.getId(),
                 p.getName(),
                 p.getPrice()
         );

@@ -8,7 +8,7 @@ loginForm.addEventListener('submit', (event) => {
     const password = document.getElementById('password').value;
 
     const data = {
-        username: loginKey, // Ta vẫn gửi key là 'username' để tương thích với Backend cũ
+        username: loginKey,
         password: password
     };
 
@@ -25,7 +25,7 @@ loginForm.addEventListener('submit', (event) => {
             sessionStorage.setItem("currentUser", loginKey);
             
             alert("Đăng nhập thành công!");
-            window.location.href = "/"; 
+            window.location.href = "/online-order"; // chuyen tam sang order luon de test
         } else {
             const errorMsg = await response.text();
             alert("Thất bại: " + (errorMsg || "Thông tin đăng nhập không chính xác!"));

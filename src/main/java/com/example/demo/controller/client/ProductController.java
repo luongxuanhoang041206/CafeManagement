@@ -7,9 +7,9 @@ import java.util.List;
 
 import com.example.demo.dto.response.ProductResponse;
 import com.example.demo.service.ProductService;
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin("*")
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductController {
     private final ProductService service;
     public ProductController(ProductService service) {

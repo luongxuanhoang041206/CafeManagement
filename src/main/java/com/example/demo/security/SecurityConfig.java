@@ -90,7 +90,10 @@ public class SecurityConfig {
             	        "/auth/register",
             	        "/admin/login",
             	        "/admin/orders",
-            	        "/v3/api-docs/**"
+            	        "/v3/api-docs/**",
+                            "/req/login",
+                            "/req/signup", "/css/**", "/js/**", "/image/**", "/pages/**",
+                            "/favicon.ico","/online-order","/api/products"
             	    ).permitAll()
             	    .requestMatchers(HttpMethod.GET, "/admin/products/**")
                     	.hasAuthority("PRODUCT_VIEW")

@@ -17,7 +17,7 @@ import com.example.demo.dto.request.CreateOrderRequest;
 import com.example.demo.dto.response.AdminOrderResponse;
 import com.example.demo.dto.response.OrderResponse;
 import com.example.demo.service.OrderService;
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 @RequestMapping("/admin/orders")
 public class AdminOrderController  {

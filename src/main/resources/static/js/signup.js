@@ -7,7 +7,7 @@ signupForm.addEventListener('submit', (event) => {
     const username = document.getElementById('username').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('passwordcon').value;
+    const confirmPassword = document.getElementById('confirm').value;
 
     // 1. Kiểm tra khớp mật khẩu tại Frontend
     if (password !== confirmPassword) {
@@ -32,7 +32,7 @@ signupForm.addEventListener('submit', (event) => {
     .then(async response => {
         if (response.ok) {
             alert("Đăng ký thành công! Kiểm tra Supabase nhé.");
-            signupForm.reset(); // Xóa trắng form sau khi xong
+            signupForm.reset();
         } else {
             const errorData = await response.text();
             alert("Lỗi từ Server: " + errorData);

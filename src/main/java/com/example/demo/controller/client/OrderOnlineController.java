@@ -9,9 +9,9 @@ import com.example.demo.service.OrderService;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/orders")
-public class OrderController  {
+public class OrderOnlineController  {
 	private final OrderService service;
-	public OrderController(OrderService service) {
+	public OrderOnlineController(OrderService service) {
 		this.service = service;
 	}
 
