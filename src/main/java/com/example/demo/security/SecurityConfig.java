@@ -93,7 +93,7 @@ public class SecurityConfig {
             	        "/v3/api-docs/**",
                             "/req/login",
                             "/req/signup", "/css/**", "/js/**", "/image/**", "/pages/**",
-                            "/favicon.ico","/online-order","/api/products"
+                            "/favicon.ico","/online-order","/api/products", "/api/**","/api/orders" // permit de test
             	    ).permitAll()
             	    .requestMatchers(HttpMethod.GET, "/admin/products/**")
                     	.hasAuthority("PRODUCT_VIEW")

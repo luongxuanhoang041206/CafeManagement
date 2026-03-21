@@ -117,9 +117,6 @@
             updateCartBadge();     // Cập nhật số lượng trên nút
             
             try {
-                // LƯU Ý: Frontend bạn viết gọi '/admin/products', 
-                // nhưng Controller backend bạn đưa ở trên là @RequestMapping("/products")
-                // Tôi đã sửa URL này lại cho khớp với controller backend của bạn.
                 const response = await fetch(`${API_BASE_URL}/api/products`); 
                 const data = await response.json();
                 renderMenu(data);
@@ -129,39 +126,95 @@
         });
 
         // Hiển thị Menu ra màn hình (theo dạng Card)
+        // 1. Hiển thị Menu (Dùng ID sản phẩm để phân biệt các ô input)
         function renderMenu(products) {
             if (!products || products.length === 0) {
-                menuItemsDiv.innerHTML = "<p class='text-gray-500 italic'>Menu trống.</p>";
+                menuItemsDiv.innerHTML = "<p class='text-gray-500 italic text-center col-span-full'>Menu trống.</p>";
                 return;
             }
 
-            menuItemsDiv.innerHTML = products.map(p => `
-                <div class="product-card bg-white rounded-lg p-5 flex flex-col justify-between">
-                    <div>
-                        <p class="font-semibold text-lg text-gray-800">${p.name}</p>
-                        <p class="text-xl font-bold text-blue-600 mb-4">${p.price.toLocaleString('vi-VN')} đ</p>
+            menuItemsDiv.innerHTML = products.map((p, index) => {
+                // Sử dụng p.id nếu có, nếu không thì dùng index để tạo ID duy nhất
+                const productId = p.id || index; 
+                
+                return `
+                    <div class="product-card bg-white rounded-lg p-5 flex flex-col justify-between border">
+                        <div>
+                            <p class="font-semibold text-lg text-gray-800">${p.name}</p>
+                            <p class="text-xl font-bold text-blue-600 mb-4">${p.price.toLocaleString('vi-VN')} đ</p>
+                        </div>
+                        
+                        <div class="flex items-center space-x-2">
+                            <div class="flex items-center border rounded">
+                                <button onclick="changeMenuQty('${productId}', -1)" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 font-bold">-</button>
+                                
+                                <input type="number" id="qty-input-${productId}" value="1" min="1" 
+                                    class="w-12 text-center text-md font-bold focus:outline-none" readonly>
+                                    
+                                <button onclick="changeMenuQty('${productId}', 1)" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 font-bold">+</button>
+                            </div>
+
+                            <button onclick="handleAddFromMenu('${productId}', '${p.name}', ${p.price})"
+                                class="flex-grow bg-green-500 text-white font-semibold py-2 rounded hover:bg-green-600 flex items-center justify-center text-sm">
+                                <span>➕ Thêm</span>
+                            </button>
+                        </div>
                     </div>
-                    <button onclick="handleAddToCart(${p.id}, '${p.name}', ${p.price})"
-                        class="w-full bg-green-500 text-white font-semibold py-2 rounded hover:bg-green-600 flex items-center justify-center">
-                        <span>➕ Thêm</span>
-                    </button>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        // Xử lý khi bấm nút "Thêm"
-        function handleAddToCart(id, name, price) {
-            const existingItem = cart.find(i => i.productId === id);
-            if (existingItem) {
-                existingItem.quantity += 1; // Mặc định mỗi lần thêm là 1
-            } else {
-                cart.push({ productId: id, name: name, price: price, quantity: 1 });
+        // 2. Hàm tăng/giảm số lượng (Tìm đúng ID của sản phẩm đó)
+        function changeMenuQty(productId, delta) {
+            const input = document.getElementById(`qty-input-${productId}`);
+            if (input) {
+                let newValue = (parseInt(input.value) || 1) + delta;
+                if (newValue < 1) newValue = 1;
+                input.value = newValue;
             }
-            saveCartToStorage();
-            updateCartBadge();
-            // alert(`Đã thêm ${name} vào giỏ hàng`); // alert để test
         }
 
+        // 3. Hàm xử lý khi nhấn nút "Thêm" từ Menu
+        function handleAddFromMenu(productId, name, price) {
+            const input = document.getElementById(`qty-input-${productId}`);
+            const quantityToAdd = parseInt(input.value) || 1;
+            
+            // Gọi hàm thêm vào giỏ hàng thực tế của bạn
+            // Giả sử hàm đó là addToCart(id, name, price, quantity)
+            if (typeof handleAddToCart === "function") {
+                handleAddToCart(productId, name, price, quantityToAdd);
+            } else {
+                console.log("Sản phẩm:", name, "Số lượng:", quantityToAdd);
+                alert(`Đã thêm ${quantityToAdd} x ${name} vào giỏ hàng!`);
+            }
+            
+            // Reset lại số lượng về 1 sau khi thêm thành công
+            input.value = 1;
+        }
+
+        // 4. Hàm handleAddToCart (Cần sửa lại để nhận đúng tham số)
+        function handleAddToCart(productId, name, price, quantity) {
+            // 1. Kiểm tra xem sản phẩm đã có trong giỏ chưa
+            // Lưu ý: ép kiểu productId về String hoặc Number cho đồng bộ
+            const existingItem = cart.find(item => String(item.productId) === String(productId));
+
+            if (existingItem) {
+                // Nếu có rồi thì cộng dồn số lượng
+                existingItem.quantity += quantity;
+            } else {
+                // Nếu chưa có thì thêm mới
+                cart.push({
+                    productId: productId,
+                    name: name,
+                    price: price,
+                    quantity: quantity
+                });
+            }
+            saveCartToStorage(); 
+            updateCartBadge();
+
+            alert(`Đã thêm ${quantity} ${name} vào giỏ hàng`);
+        }
 
         // --- 2. CHỨC NĂNG LOCAL STORAGE & GIỎ HÀNG ---
 
@@ -197,7 +250,7 @@
         // Hiển thị trang Giỏ hàng từ dữ liệu trong `cart`
         function renderCartPage() {
             if (cart.length === 0) {
-                cartItemsDiv.innerHTML = "<p class='text-gray-500 italic text-center'>Giỏ hàng đang trống.</p>";
+                cartItemsDiv.innerHTML = "<p class='text-gray-500 italic text-center'>Giỏ hàng đang trống.</p>";
                 cartTotalSpan.innerText = "0đ";
                 checkoutBtn.disabled = true;
                 return;
@@ -206,23 +259,23 @@
             checkoutBtn.disabled = false;
             let totalAmount = 0;
 
-            cartItemsDiv.innerHTML = cart.map((item, index) => {
+            cartItemsDiv.innerHTML = cart.map((item) => {
                 const itemTotal = item.price * item.quantity;
                 totalAmount += itemTotal;
                 return `
                     <div class="flex items-center justify-between border-b pb-4">
                         <div class="flex-grow">
                             <p class="font-semibold text-lg text-gray-800">${item.name}</p>
-                            <p class="text-blue-600 font-bold">${item.price.toLocaleString('vi-VN')} đ / sp</p>
+                            <p class="text-blue-600 font-bold">${item.price.toLocaleString('vi-VN')} đ</p>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <button onclick="changeQuantity(${item.productId}, -1)" class="bg-gray-200 px-3 py-1 rounded">-</button>
+                            <button onclick="changeQuantity('${item.productId}', -1)" class="bg-gray-200 px-3 py-1 rounded">-</button>
                             <span class="font-bold text-lg w-8 text-center">${item.quantity}</span>
-                            <button onclick="changeQuantity(${item.productId}, 1)" class="bg-gray-200 px-3 py-1 rounded">+</button>
+                            <button onclick="changeQuantity('${item.productId}', 1)" class="bg-gray-200 px-3 py-1 rounded">+</button>
                         </div>
                         <div class="ml-6 text-right w-32">
                             <p class="text-xl font-bold">${itemTotal.toLocaleString('vi-VN')}đ</p>
-                            <button onclick="removeItemFromCart(${item.productId})" class="text-sm text-red-500 hover:text-red-700">❌ Xóa</button>
+                            <button onclick="removeItemFromCart('${item.productId}')" class="text-sm text-red-500 hover:text-red-700">❌ Xóa</button>
                         </div>
                     </div>
                 `;
@@ -233,11 +286,13 @@
 
         // Thay đổi số lượng sản phẩm (trong trang Giỏ hàng)
         function changeQuantity(productId, amount) {
-            const item = cart.find(i => i.productId === productId);
+            // Ép kiểu cả 2 về String để so sánh chính xác 100%
+            const item = cart.find(i => String(i.productId) === String(productId));
+            
             if (item) {
                 item.quantity += amount;
                 if (item.quantity <= 0) {
-                    removeItemFromCart(productId); // Xóa nếu số lượng = 0
+                    removeItemFromCart(productId);
                 } else {
                     saveCartToStorage();
                     renderCartPage();
@@ -246,9 +301,10 @@
             }
         }
 
-        // Xóa sản phẩm khỏi giỏ hàng
         function removeItemFromCart(productId) {
-            cart = cart.filter(item => item.productId !== productId);
+            // Lọc bỏ sản phẩm có ID trùng khớp
+            cart = cart.filter(item => String(item.productId) !== String(productId));
+            
             saveCartToStorage();
             renderCartPage();
             updateCartBadge();
@@ -260,79 +316,73 @@
         checkoutBtn.onclick = async () => {
             if (cart.length === 0) return;
 
-            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            // Lấy giá trị và ép kiểu chuẩn xác
+            const tableIdVal = document.getElementById('tableId').value;
+            const paymentMethodVal = document.getElementById('paymentMethod').value;
 
-            // Chuẩn bị dữ liệu khớp với `CreateOrderRequest` trong Java
             const orderData = {
-                orderSource: "WEB", // Nguồn mặc định
-                tableId: parseInt(document.getElementById('tableId').value),
-                userId: parseInt(document.getElementById('userId').value) || 0, // 0 nếu không nhập
-                employeeId: 0, // 0 cho đơn online
-                status: "PAID", // Mặc định là đã thanh toán
-                totalAmount: totalAmount,
-                paymentMethod: document.getElementById('paymentMethod').value,
-                // Dữ liệu khớp với `CreateOrderItemRequest`
+                orderSource: "WEB",
+                tableId: parseInt(tableIdVal) || 0,
+                userId: parseInt(document.getElementById('userId')?.value) || 0,
+                status: "PAID",
+                totalAmount: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                paymentMethod: paymentMethodVal, // Hãy chắc chắn giá trị này là "CASH" hoặc "MOMO"...
                 items: cart.map(item => ({
-                    productId: item.productId,
-                    quantity: item.quantity,
-                    price: item.price
+                    productId: parseInt(item.productId), 
+                    quantity: parseInt(item.quantity),
+                    price: parseFloat(item.price)
                 }))
             };
 
-            console.log("Gửi Order Data:", orderData); // Để test
-
             try {
-                // LƯU Ý: Backend gọi '/api/orders', 
-                // Tôi sửa URL lại cho khớp với controller backend của bạn.
                 const response = await fetch(`${API_BASE_URL}/api/orders`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(orderData)
                 });
 
+                const result = await response.json(); // Thử đọc JSON trả về từ backend
+
                 if (response.ok) {
-                    const result = await response.json();
-                    showMockInvoice(result, orderData); // Xuất hóa đơn giả lập
-                    cart = []; // Xóa giỏ hàng
+                    showMockInvoice(result, orderData);
+                    cart = [];
                     saveCartToStorage();
                     updateCartBadge();
-                    togglePage(true); // Quay lại Menu
+                    alert("Đặt đơn thành công!");
                 } else {
-                    const error = await response.text();
-                    alert("Lỗi khi tạo đơn: " + error);
+                    // Hiển thị lỗi chi tiết từ Backend trả về
+                    alert("Lỗi từ Backend: " + (result.message || JSON.stringify(result)));
                 }
             } catch (err) {
-                alert("Không thể kết nối đến Backend (Kiểm tra CORS hoặc Server)");
+                console.error("Lỗi kết nối:", err);
+                alert("Không thể kết nối server. Hãy kiểm tra Backend đã chạy chưa?");
             }
         };
 
         // Hiển thị hóa đơn (Giả lập để test)
         function showMockInvoice(orderResponse, originalData) {
-            const dateStr = new Date(orderResponse.created_at).toLocaleString();
+            const dateStr = new Date().toLocaleString();
             
-            let itemsHtml = originalData.items.map(item => {
-                // Lấy lại tên sản phẩm từ state hiện tại cho hóa đơn (Vì trong JS `cart` bị xóa rồi)
-                const cartItem = cart.find(i => i.productId === item.productId);
-                return `
-                    <div class="flex justify-between border-b pb-1">
-                        <span>${item.productId} x ${item.quantity}</span>
-                        <span>${(item.price * item.quantity).toLocaleString('vi-VN')} đ</span>
-                    </div>
-                `;
-            }).join('');
+            // Dùng trực tiếp originalData.items
+            let itemsHtml = originalData.items.map(item => `
+                <div class="flex justify-between border-b border-dashed py-1">
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>${(item.price * item.quantity).toLocaleString('vi-VN')} đ</span>
+                </div>
+            `).join('');
 
             invoiceContent.innerHTML = `
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-bold">HÓA ĐƠN THANH TOÁN</h2>
-                    <p class="text-gray-600">ID Đơn: ${orderResponse.id}</p>
-                    <p class="text-gray-600">Bàn: ${originalData.tableId} - ${dateStr}</p>
+                <div class="text-center mb-4">
+                    <h2 class="text-xl font-bold">HÓA ĐƠN</h2>
+                    <p class="text-xs">ID: ${orderResponse.id || 'N/A'}</p>
+                    <p class="text-xs">Bàn: ${originalData.tableId} | ${dateStr}</p>
                 </div>
-                <div class="space-y-3 font-mono text-sm mb-6">
+                <div class="space-y-1 font-mono text-sm mb-4">
                     ${itemsHtml}
                 </div>
-                <div class="flex justify-between text-xl font-bold border-t-2 pt-3 border-gray-900">
-                    <span>TỔNG CỘNG:</span>
-                    <span>${orderResponse.totalAmount.toLocaleString('vi-VN')} đ</span>
+                <div class="flex justify-between text-lg font-bold border-t pt-2">
+                    <span>TỔNG:</span>
+                    <span>${originalData.totalAmount.toLocaleString('vi-VN')} đ</span>
                 </div>
             `;
             invoiceSection.classList.remove('hidden');
