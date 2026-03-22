@@ -10,7 +10,7 @@ import com.example.demo.dto.request.ClientCreateOrderRequest;
 import com.example.demo.dto.response.ClientOrderResponse;
 import com.example.demo.service.OrderService;
 
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "*", allowCredentials = "true")
 @RestController
 @RequestMapping("/orders")
 public class ClientOrderController  {

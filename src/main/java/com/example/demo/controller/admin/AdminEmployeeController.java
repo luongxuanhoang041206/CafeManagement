@@ -12,7 +12,7 @@ import com.example.demo.service.EmployeeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "*", allowCredentials = "true")
 @RestController
 @RequestMapping("/admin/employee")
 

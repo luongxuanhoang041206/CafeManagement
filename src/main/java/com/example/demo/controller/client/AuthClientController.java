@@ -16,7 +16,7 @@ import com.example.demo.dto.request.SignupRequest;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.repository.UserRepository;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/auth")
 public class AuthClientController {

@@ -20,7 +20,7 @@ import com.example.demo.repository.EmployeeRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "*", allowCredentials = "true")
 @RestController
 @RequestMapping("/admin")
 public class AuthController  {
