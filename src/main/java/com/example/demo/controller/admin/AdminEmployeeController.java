@@ -12,7 +12,7 @@ import com.example.demo.service.EmployeeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-@CrossOrigin(origins = "*", allowCredentials = "true")
+@CrossOrigin(origins = "https://fe-cafe-management-qtup6nb42-luongxuanhoang041206s-projects.vercel.app", allowCredentials = "true")
 @RestController
 @RequestMapping("/admin/employee")
 

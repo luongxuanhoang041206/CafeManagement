@@ -16,7 +16,7 @@ import com.example.demo.dto.request.SignupRequest;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.repository.UserRepository;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://fe-cafe-management-qtup6nb42-luongxuanhoang041206s-projects.vercel.app")
 @RestController
 @RequestMapping("/auth")
 public class AuthClientController {

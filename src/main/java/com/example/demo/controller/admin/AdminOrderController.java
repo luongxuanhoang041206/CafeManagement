@@ -20,7 +20,7 @@ import com.example.demo.dto.request.UpdateOrderStatusRequest;
 import com.example.demo.dto.response.AdminOrderResponse;
 import com.example.demo.dto.response.OrderResponse;
 import com.example.demo.service.OrderService;
-@CrossOrigin(origins = "*", allowCredentials = "true")
+@CrossOrigin(origins = "https://fe-cafe-management-qtup6nb42-luongxuanhoang041206s-projects.vercel.app", allowCredentials = "true")
 @RestController
 @RequestMapping("/admin/orders")
 public class AdminOrderController  {

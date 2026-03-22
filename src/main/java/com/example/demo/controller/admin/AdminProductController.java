@@ -10,7 +10,7 @@ import com.example.demo.dto.request.UpdateProductRequest;
 import com.example.demo.dto.response.AdminProductResponse;
 import com.example.demo.service.ProductService;
 import org.springframework.data.domain.Pageable;
-@CrossOrigin(origins = "*", allowCredentials = "true")
+@CrossOrigin(origins = "https://fe-cafe-management-qtup6nb42-luongxuanhoang041206s-projects.vercel.app", allowCredentials = "true")
 @RestController
 @RequestMapping("/admin/products")
 public class AdminProductController {

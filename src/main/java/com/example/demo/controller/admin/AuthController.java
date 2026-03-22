@@ -20,7 +20,7 @@ import com.example.demo.repository.EmployeeRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-@CrossOrigin(origins = "*", allowCredentials = "true")
+@CrossOrigin(origins = "https://fe-cafe-management-qtup6nb42-luongxuanhoang041206s-projects.vercel.app", allowCredentials = "true")
 @RestController
 @RequestMapping("/admin")
 public class AuthController  {
