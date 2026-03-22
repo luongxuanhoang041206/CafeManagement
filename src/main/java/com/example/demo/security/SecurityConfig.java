@@ -69,14 +69,16 @@ public class SecurityConfig {
     @Bean("userAuthManager")
     @Primary
     public AuthenticationManager userAuthManager(PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider userProvider = new DaoAuthenticationProvider(userService);
+        DaoAuthenticationProvider userProvider = new DaoAuthenticationProvider();
+        userProvider.setUserDetailsService(userService);
         userProvider.setPasswordEncoder(passwordEncoder);
-        return new ProviderManager(userProvider); // CHỈ 1 provider
+        return new ProviderManager(userProvider); 
     }
 
     @Bean("employeeAuthManager") 
     public AuthenticationManager employeeAuthManager(PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider employeeProvider = new DaoAuthenticationProvider(customEmployeeDetailService);
+        DaoAuthenticationProvider employeeProvider = new DaoAuthenticationProvider();
+        employeeProvider.setUserDetailsService(customEmployeeDetailService);
         employeeProvider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(employeeProvider); // CHỈ 1 provider
     }
