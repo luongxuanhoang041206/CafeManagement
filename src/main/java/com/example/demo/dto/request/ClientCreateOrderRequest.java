@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Data;
 @Data
 
-public class CreateOrderRequest  {
+public class ClientCreateOrderRequest  {
 	private String orderSource;
 	private Long tableId;
 	private Long userId;
@@ -16,4 +16,5 @@ public class CreateOrderRequest  {
 	private Date created_at;
 	private List<CreateOrderItemRequest> items;
     private String methodPayment;
+    private String address;
 }

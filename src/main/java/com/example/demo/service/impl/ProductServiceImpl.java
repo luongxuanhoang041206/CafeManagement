@@ -128,12 +128,9 @@ public class ProductServiceImpl implements ProductService {
         }
 
         // update group nếu khác null
-//        if (request.getGroupId() != null) {
-//            GroupEntity group = groupRepo.findById(request.getGroupId())
-//                    .orElseThrow(() -> new RuntimeException("Group Not Found"));
-//
-//            product.setGroup(group);
-//        }
+        if (request.getGroupId() != null) {
+           product.setGroupId(request.getGroupId());
+        }
 
         ProductEntity savedProduct = repo.save(product);
 

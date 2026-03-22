@@ -1,7 +1,9 @@
 package com.example.demo.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,10 +19,11 @@ public class UserEntity  {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	@Column(name = "username")
 	private String username;
 	private String password;
 	private String email;
 	private boolean active;
-	private Date created_at;
+	private LocalDateTime createdAt;
 	private String role;
 }

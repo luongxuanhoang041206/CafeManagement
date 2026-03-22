@@ -23,7 +23,7 @@ public class CustomEmployeeDetailService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return User.builder()
-                .username(employee.getName())
+                .username(employee.getUsername()) 
                 .password(employee.getPassword())
                 .authorities(employee.getRole().name())
                 .build();

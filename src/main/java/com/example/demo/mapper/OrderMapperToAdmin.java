@@ -16,6 +16,7 @@ public class OrderMapperToAdmin  {
 				o.getEmployeeId(),
 				o.getStatus(),
 				o.getTotalAmount(),
+				o.getMethodPayment(),
 				o.getCreatedAt()
 		);
 	}

@@ -12,7 +12,11 @@ import com.example.demo.entity.UserEntity;
 public interface UserRepository extends JpaRepository<UserEntity, Long>,
 											JpaSpecificationExecutor<UserEntity>
 {
-	List<UserEntity> findByNameContainingIgnoreCase(String name);
+	//List<UserEntity> findByNameContainingIgnoreCase(String name);
 
 	Optional<UserEntity> findByUsername(String username);
+	
+	boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
 }

@@ -24,5 +24,7 @@ public class OrderEntity  {
 	private Long employeeId;
 	private String status;
 	private Long totalAmount;
+	private String methodPayment;
 	private LocalDateTime createdAt;
+	private String address;
 }

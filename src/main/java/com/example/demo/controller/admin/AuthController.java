@@ -4,26 +4,33 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.dto.request.LoginAdminRequest;
 import com.example.demo.entity.EmployeeEntity;
 import com.example.demo.repository.EmployeeRepository;
 
-@CrossOrigin(origins = "http://localhost:3000")
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/admin")
 public class AuthController  {
 	@Autowired
+	@Qualifier("employeeAuthManager")
     private AuthenticationManager authenticationManager;
 	@Autowired
 	private EmployeeRepository employeeRepository;
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginAdminRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginAdminRequest request, HttpServletRequest httpRequest) {
     	
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -31,9 +38,13 @@ public class AuthController  {
                         request.getPassword()
                 )
         );
-        System.out.println(request.getUsername());
-//        String username = authentication.getName(); //lay tu authentication.getPrincipal()
-//        System.out.println(username);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        HttpSession session = httpRequest.getSession(true);
+        session.setAttribute(
+            HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+            SecurityContextHolder.getContext()
+        );
         EmployeeEntity employee = employeeRepository.findByUsername(request.getUsername())
         		.orElseThrow(() -> new RuntimeException("Employee not found"));
 
@@ -44,6 +55,8 @@ public class AuthController  {
             .stream().findFirst()
             .map(a -> a.getAuthority())
             .orElse("UNKNOWN"));
+        
+        
 
         return ResponseEntity.ok(response);
     }

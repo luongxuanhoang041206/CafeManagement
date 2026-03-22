@@ -20,6 +20,8 @@ import com.example.demo.mapper.OrderMapperToClient;
 import com.example.demo.repository.OrderItemRepository;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.PaymentRepository;
+import com.example.demo.dto.request.ClientCreateOrderRequest;
+import com.example.demo.dto.response.ClientOrderResponse;
 import com.example.demo.service.OrderService;
 import com.example.demo.specification.OrderSpecification;
 
@@ -86,6 +88,7 @@ public class OrderServiceImpl implements OrderService {
         order.setEmployeeId(request.getEmployeeId());
         order.setStatus(request.getStatus());
         order.setTotalAmount(request.getTotalAmount());
+        order.setMethodPayment(request.getMethodPayment());
 
         if (request.getCreated_at() != null) {
             order.setCreatedAt(
@@ -115,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
 
         PaymentEntity payment = new PaymentEntity();
         payment.setOrderId(savedOrder.getId());
-        payment.setMethod(request.getPaymentMethod());
+        payment.setMethod(request.getMethodPayment());
         payment.setAmount(savedOrder.getTotalAmount());
         payment.setStatus("PAID");
         payment.setPaidAt(LocalDateTime.now());
@@ -141,6 +144,67 @@ public class OrderServiceImpl implements OrderService {
 
         OrderEntity updatedOrder = repo.save(order);
         return mapperAdmin.toAdmin(updatedOrder);
+    }
+
+    @Override
+    public ClientOrderResponse clientCreate(ClientCreateOrderRequest request) {
+
+        // 1. Create order
+        OrderEntity order = new OrderEntity();
+        order.setOrderSource("ONLINE"); // client luôn là online
+        order.setUserId(request.getUserId());
+        order.setStatus("PENDING");
+        order.setMethodPayment(request.getMethodPayment());
+        order.setAddress(request.getAddress());
+
+        // ❗ client thường không có tableId, employeeId
+        order.setTableId(null);
+        order.setEmployeeId(null);
+
+        // totalAmount nên tự tính từ items (chuẩn hơn)
+        long totalAmount = 0;
+
+        OrderEntity savedOrder = repo.save(order);
+
+        // 2. Create order items
+        if (request.getItems() == null || request.getItems().isEmpty()) {
+            throw new RuntimeException("Order must contain at least one item");
+        }
+
+        for (CreateOrderItemRequest item : request.getItems()) {
+
+            OrderItemEntity orderItem = new OrderItemEntity();
+            orderItem.setOrderId(savedOrder.getId());
+            orderItem.setProductId(item.getProductId());
+            orderItem.setQuantity(item.getQuantity());
+            orderItem.setPrice(item.getPrice());
+
+            totalAmount += item.getPrice() * item.getQuantity();
+
+            orderItemRepository.save(orderItem);
+        }
+
+        // 3. Update totalAmount
+        savedOrder.setTotalAmount(totalAmount);
+        savedOrder.setCreatedAt(LocalDateTime.now());
+        repo.save(savedOrder);
+
+        // 4. Payment 
+        PaymentEntity payment = new PaymentEntity();
+        payment.setOrderId(savedOrder.getId());
+        payment.setMethod(request.getMethodPayment());
+        payment.setAmount(totalAmount);
+
+        if ("CASH".equals(request.getMethodPayment())) {
+            payment.setStatus("UNPAID");
+        } else {
+            payment.setStatus("PAID");
+            payment.setPaidAt(LocalDateTime.now());
+        }
+
+        paymentRepository.save(payment);
+
+        return mapper.toClient(savedOrder);
     }
     
     

@@ -1,5 +1,6 @@
 package com.example.demo.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.Data;
@@ -11,9 +12,9 @@ public class AdminUserResponse  {
 	private String password;
 	private String email;
 	private boolean active;
-	private Date created_at;
+	private LocalDateTime created_at;
 	private String role;
-	public AdminUserResponse(Long id, String name, String password, String email, boolean active, Date created_at, String role) {
+	public AdminUserResponse(Long id, String name, String password, String email, boolean active, LocalDateTime created_at, String role) {
 		super();
 		this.id = id;
 		this.name = name;

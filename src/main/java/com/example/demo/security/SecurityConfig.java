@@ -29,6 +29,7 @@ package com.example.demo.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -64,55 +65,77 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider employeeProvider = new DaoAuthenticationProvider(customEmployeeDetailService);
-        employeeProvider.setPasswordEncoder(passwordEncoder);
-
+ // SecurityConfig.java — CHỈ dùng userProvider cho /auth/login
+    @Bean("userAuthManager")
+    @Primary
+    public AuthenticationManager userAuthManager(PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider userProvider = new DaoAuthenticationProvider(userService);
         userProvider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(userProvider); // CHỈ 1 provider
+    }
 
-        return new ProviderManager(employeeProvider, userProvider);
+    @Bean("employeeAuthManager") 
+    public AuthenticationManager employeeAuthManager(PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider employeeProvider = new DaoAuthenticationProvider(customEmployeeDetailService);
+        employeeProvider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(employeeProvider); // CHỈ 1 provider
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        http
-            .cors(Customizer.withDefaults())
-            .csrf(csrf -> csrf.disable())
-
-            .authorizeHttpRequests(auth -> auth
-            	    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-            	    .requestMatchers(
-            	        "/products/**",
-            	        "/admin/**",
-            	        "/auth/login",
-            	        "/auth/register",
-            	        "/admin/login",
-            	        "/admin/orders",
-            	        "/v3/api-docs/**"
-            	    ).permitAll()
-            	    .requestMatchers(HttpMethod.GET, "/admin/products/**")
-                    	.hasAuthority("PRODUCT_VIEW")
-
-	                .requestMatchers(HttpMethod.POST, "/admin/products/**")
-	                    .hasAuthority("PRODUCT_CREATE")
-	
-	                .requestMatchers(HttpMethod.PUT, "/admin/products/**")
-	                    .hasAuthority("PRODUCT_UPDATE")
-	
-	                .requestMatchers(HttpMethod.DELETE, "/admin/products/**")
-	                    .hasAuthority("PRODUCT_DELETE")
-	                    
-            	    .requestMatchers("/orders/**").hasRole("USER")
-            	    .requestMatchers("/admin/**").hasRole("ADMIN")
-            	    .anyRequest().authenticated()
-            	)
-            	.formLogin(form -> form.disable()); // tắt formLogin đi
-          //  .authenticationProvider(authenticationProvider())
-         //   .authenticationProvider(userAuthProvider());
-
+    	System.out.println(">>> SecurityFilterChain được load!");
+    	http
+        .cors(Customizer.withDefaults())
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
+//            // 1. OPTIONS
+//            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//            
+//            // 2. Public endpoints
+//            .requestMatchers(
+//                "/products/**",
+//                "/auth/login",
+//                "/auth/register",
+//                "/admin/login",
+//                "/v3/api-docs/**"
+//            ).permitAll()
+//            
+//            // 3. Product permissions
+//            .requestMatchers(HttpMethod.GET, "/admin/products/**")
+//                .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STAFF")
+//            .requestMatchers(HttpMethod.POST, "/admin/products/**")
+//                .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
+//            .requestMatchers(HttpMethod.PUT, "/admin/products/**")
+//                .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
+//            .requestMatchers(HttpMethod.DELETE, "/admin/products/**")
+//                .hasAnyAuthority("ROLE_ADMIN")
+//
+//            // 4. Orders
+//            .requestMatchers("/admin/orders/**")
+//                .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STAFF")
+//
+//            // 5. Employees
+//            .requestMatchers(HttpMethod.GET, "/admin/employees/**")
+//                .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
+//            .requestMatchers("/admin/employees/**")
+//                .hasAnyAuthority("ROLE_ADMIN")
+//
+//            // 6. Users
+//            .requestMatchers("/admin/users/**")
+//                .hasAnyAuthority("ROLE_ADMIN")
+//            
+//            // 7. Admin endpoints
+//            .requestMatchers("/admin/**").authenticated()
+//            
+//            // 8. Mặc định
+//            .anyRequest().authenticated()
+        		 .anyRequest().permitAll()
+        )
+        .formLogin(form -> form.disable())
+        .sessionManagement(session -> session
+            .sessionCreationPolicy(
+                org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED)
+        );
         return http.build();
     }
 
