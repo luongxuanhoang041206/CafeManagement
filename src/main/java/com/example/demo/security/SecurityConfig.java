@@ -1,30 +1,4 @@
-//package com.example.demo.security;
-//
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.web.SecurityFilterChain;
-//import org.springframework.security.config.Customizer;
-//
-//@Configuration
-//@EnableMethodSecurity
-//public class SecurityConfig {
-//
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//
-//        http
-//            .cors(Customizer.withDefaults())   
-//            .csrf(csrf -> csrf.disable())
-//            .authorizeHttpRequests(auth -> auth
-//                .requestMatchers("/admin/**", "/**").permitAll()
-//                .anyRequest().permitAll()
-//            );
-//
-//        return http.build();
-//    }
-//}
+
 package com.example.demo.security;
 
 import org.springframework.context.annotation.Bean;
@@ -80,7 +54,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider employeeProvider = new DaoAuthenticationProvider();
         employeeProvider.setUserDetailsService(customEmployeeDetailService);
         employeeProvider.setPasswordEncoder(passwordEncoder);
-        return new ProviderManager(employeeProvider); // CHỈ 1 provider
+        return new ProviderManager(employeeProvider); 
     }
 
     @Bean

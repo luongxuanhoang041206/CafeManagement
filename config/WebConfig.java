@@ -12,7 +12,7 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-
+        System.out.println(">>> CorsFilter được khởi tạo!"); // ← thêm dòng này
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("https://fe-cafe-management.vercel.app");
 
