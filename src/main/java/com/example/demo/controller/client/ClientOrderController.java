@@ -10,7 +10,6 @@ import com.example.demo.dto.request.ClientCreateOrderRequest;
 import com.example.demo.dto.response.ClientOrderResponse;
 import com.example.demo.service.OrderService;
 
-@CrossOrigin(origins = "https://fe-cafe-management-j7rf2tmsi-luongxuanhoang041206s-projects.vercel.app", allowCredentials = "true")
 @RestController
 @RequestMapping("/orders")
 public class ClientOrderController  {

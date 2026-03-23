@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.example.demo.dto.response.ProductResponse;
 import com.example.demo.service.ProductService;
-@CrossOrigin(origins = "https://fe-cafe-management-j7rf2tmsi-luongxuanhoang041206s-projects.vercel.app")
 @RestController
 @RequestMapping("/products")
 public class ProductController {
