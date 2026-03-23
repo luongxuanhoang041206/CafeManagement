@@ -85,63 +85,40 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    	System.out.println(">>> SecurityFilterChain được load!");
-    	http
-        .cors(Customizer.withDefaults())
-        .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth
-//            // 1. OPTIONS
-//            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//            
-//            // 2. Public endpoints
-//            .requestMatchers(
-//                "/products/**",
-//                "/auth/login",
-//                "/auth/register",
-//                "/admin/login",
-//                "/v3/api-docs/**"
-//            ).permitAll()
-//            
-//            // 3. Product permissions
-//            .requestMatchers(HttpMethod.GET, "/admin/products/**")
-//                .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STAFF")
-//            .requestMatchers(HttpMethod.POST, "/admin/products/**")
-//                .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
-//            .requestMatchers(HttpMethod.PUT, "/admin/products/**")
-//                .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
-//            .requestMatchers(HttpMethod.DELETE, "/admin/products/**")
-//                .hasAnyAuthority("ROLE_ADMIN")
-//
-//            // 4. Orders
-//            .requestMatchers("/admin/orders/**")
-//                .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STAFF")
-//
-//            // 5. Employees
-//            .requestMatchers(HttpMethod.GET, "/admin/employees/**")
-//                .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
-//            .requestMatchers("/admin/employees/**")
-//                .hasAnyAuthority("ROLE_ADMIN")
-//
-//            // 6. Users
-//            .requestMatchers("/admin/users/**")
-//                .hasAnyAuthority("ROLE_ADMIN")
-//            
-//            // 7. Admin endpoints
-//            .requestMatchers("/admin/**").authenticated()
-//            
-//            // 8. Mặc định
-//            .anyRequest().authenticated()
-        		 .anyRequest().permitAll()
-        )
-        .formLogin(form -> form.disable())
-        .sessionManagement(session -> session
-            .sessionCreationPolicy(
-                org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED)
-        );
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers(
+                    "/products/**",
+                    "/auth/login",
+                    "/auth/register",
+                    "/admin/login"
+                ).permitAll()
+                .requestMatchers(HttpMethod.GET, "/admin/products/**")
+                    .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STAFF")
+                .requestMatchers(HttpMethod.POST, "/admin/products/**")
+                    .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
+                .requestMatchers(HttpMethod.PATCH, "/admin/products/**")
+                    .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
+                .requestMatchers(HttpMethod.DELETE, "/admin/products/**")
+                    .hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers("/admin/orders/**")
+                    .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STAFF")
+                .requestMatchers(HttpMethod.GET, "/admin/employees/**")
+                    .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
+                .requestMatchers("/admin/employees/**")
+                    .hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers("/admin/users/**")
+                    .hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers("/admin/**").authenticated()
+                .anyRequest().authenticated()
+            )
+            .formLogin(form -> form.disable())
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(
+                    org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED)
+            );
         return http.build();
     }
-
-	
-
-	
 }
