@@ -1,0 +1,34 @@
+[33m859fd34[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m v4
+[33m2c0cd3f[m v3
+[33mb4e891e[m 24_3_v2
+[33mdb02290[m 24_3
+[33m1a11764[m g
+[33mbdf40e3[m k
+[33me1facf3[m h
+[33m599e9a9[m g
+[33m8f1041b[m f
+[33m0809e8f[m e
+[33meaccb20[m d
+[33m7dc6228[m c
+[33mc0659bf[m b
+[33m4ee59b8[m a
+[33m6788f1a[m 233
+[33mf65ec9f[m kk
+[33mf93aace[m k
+[33m4e2b9e7[m fix cor v2
+[33m231a4f2[m fix cors
+[33mce3273f[m deploy v6
+[33m6feed20[m deploy v5
+[33mbd0ffd3[m fix delpoy v3
+[33mf41aa21[m fix deloy v2
+[33m14d5eb2[m fix deloy
+[33mf9b0e38[m add docker
+[33m3b2999a[m[33m ([m[1;31morigin/feature/phan_quyen_temp[m[33m, [m[1;32mfeature/phan_quyen_temp[m[33m)[m hoan thien 99%
+[33mf620d2b[m hoan thien phan quyen + order admin
+[33mbbab5f5[m update login
+[33mc31806b[m phan quyen
+[33m04a81be[m[33m ([m[1;31morigin/feature/order-api[m[33m, [m[1;32mfeature/order-api[m[33m)[m update Order
+[33m319fd5d[m Update Order but not yet divied admin client
+[33m2c00881[m update user + employee ben admin
+[33m9a69f23[m update search + pagination + changeStatus
+[33m581e639[m Cau hinh ban dau + admin/product + post tao san pham
