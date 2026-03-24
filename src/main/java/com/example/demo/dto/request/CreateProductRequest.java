@@ -9,4 +9,5 @@ public class CreateProductRequest {
     private Double price;
     private Boolean active;
     private Long groupId;
+    private String imageUrl;
 }

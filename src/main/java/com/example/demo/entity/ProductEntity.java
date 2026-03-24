@@ -25,4 +25,5 @@ public class ProductEntity {
     @Column(name = "created_at")
     private Date createdAt;
     private Date deletedAt;
+    private String imageUrl;
 }

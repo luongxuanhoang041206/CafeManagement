@@ -12,7 +12,8 @@ public class ProductMapper {
         return new ProductResponse(
         		p.getId(),
                 p.getName(),
-                p.getPrice()
+                p.getPrice(),
+                p.getImageUrl()
         );
     }
 
@@ -22,7 +23,8 @@ public class ProductMapper {
                 p.getName(),
                 p.getPrice(),
                 p.getActive(),
-                p.getGroupId()
+                p.getGroupId(),
+                p.getImageUrl()
         );
     }
 }

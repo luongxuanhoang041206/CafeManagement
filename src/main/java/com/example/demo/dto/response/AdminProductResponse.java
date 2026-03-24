@@ -10,13 +10,15 @@ public class AdminProductResponse {
     private double price;
     private boolean active;
     private Long groupId;
+    private String imageUrl;
 
     public AdminProductResponse(Long id, String name,
-                                double price, boolean active, Long groupId) {
+                                double price, boolean active, Long groupId, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.active = active;
         this.groupId = groupId;
+        this.imageUrl = imageUrl;
     }
 }

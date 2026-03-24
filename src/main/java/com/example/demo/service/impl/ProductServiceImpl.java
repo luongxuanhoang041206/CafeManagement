@@ -81,6 +81,7 @@ public class ProductServiceImpl implements ProductService {
         product.setActive(request.getActive());
         product.setGroupId(request.getGroupId());
         product.setCreatedAt(new Date());  
+        product.setImageUrl(request.getImageUrl());
         ProductEntity savedProduct = repo.save(product);
 
         return mapper.toAdmin(savedProduct);
@@ -130,6 +131,10 @@ public class ProductServiceImpl implements ProductService {
         // update group nếu khác null
         if (request.getGroupId() != null) {
            product.setGroupId(request.getGroupId());
+        }
+        
+        if (request.getImageUrl() != null) {
+        	product.setImageUrl(request.getImageUrl());
         }
 
         ProductEntity savedProduct = repo.save(product);
