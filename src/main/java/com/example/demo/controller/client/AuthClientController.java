@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.dto.request.LoginRequest;
@@ -16,11 +18,14 @@ import com.example.demo.dto.request.SignupRequest;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.repository.UserRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthClientController {
 	@Autowired
-    @Qualifier("userAuthManager")  // ← inject đúng bean
+    @Qualifier("userAuthManager")  
     private AuthenticationManager authenticationManager;
 
     @Autowired
@@ -28,45 +33,15 @@ public class AuthClientController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
-    
-//    public AuthClientController( AuthenticationManager authenticationManager,
-//                                UserRepository userRepository,
-//                                PasswordEncoder passwordEncoder) {
-//        this.authenticationManager = authenticationManager;
-//        this.userRepository = userRepository;
-//        this.passwordEncoder = passwordEncoder;
-//    }
 
-//    @PostMapping("/login")
-//    public String login(@RequestBody LoginRequest request) {
-//
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        request.getUsername(),
-//                        request.getPassword()
-//                )
-//        );
-//
-//        if (authentication.isAuthenticated()) {
-//            return "Login success";
-//        }
-//        System.out.println(">>> Controller reached! username: " + request.getUsername());
-//        System.out.println(">>> Password: " + request.getPassword());
-//        return "Login failed";
-//    }
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody(required = false) LoginRequest request) {
-        System.out.println(">>> /auth/login được gọi!");
-        System.out.println(">>> Request body: " + request);
+    public ResponseEntity<?> login(
+            @RequestBody(required = false) LoginRequest request,
+            HttpServletRequest httpRequest) {
         
         if (request == null) {
-            System.out.println(">>> REQUEST NULL - body parse thất bại!");
             return ResponseEntity.badRequest().body("Request null");
         }
-        
-        System.out.println(">>> username: " + request.getUsername());
-        System.out.println(">>> password: " + request.getPassword());
         
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -75,11 +50,17 @@ public class AuthClientController {
                     request.getPassword()
                 )
             );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            
+            HttpSession session = httpRequest.getSession(true);
+            session.setAttribute(
+                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                SecurityContextHolder.getContext()
+            );
+            
             return ResponseEntity.ok("Login success");
             
         } catch (Exception e) {
-            System.out.println(">>> EXCEPTION: " + e.getClass().getName());
-            System.out.println(">>> MESSAGE: " + e.getMessage());
             return ResponseEntity.status(401).body(e.getMessage());
         }
     }
@@ -97,7 +78,7 @@ public class AuthClientController {
         user.setEmail(request.getEmail());
         user.setName(request.getName());
 
-        user.setActive(true); // default
+        user.setActive(true); 
         user.setRole("ROLE_USER"); 
         user.setCreatedAt(LocalDateTime.now());
 
