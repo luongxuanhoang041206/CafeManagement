@@ -69,7 +69,7 @@ public class AuthClientController {
             UserEntity user = userOptional.get();
 
             LoginResponse response = new LoginResponse();
-            response.setId(user.getId());
+            response.setUserId(user.getId());
             response.setUsername(user.getUsername());
             response.setRole("ROLE_USER");
 
