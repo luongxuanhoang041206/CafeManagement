@@ -1,6 +1,7 @@
 package com.example.demo.controller.client;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.request.SignupRequest;
+import com.example.demo.dto.response.LoginResponse;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.repository.UserRepository;
 
@@ -58,7 +60,21 @@ public class AuthClientController {
                 SecurityContextHolder.getContext()
             );
             
-            return ResponseEntity.ok("Login success");
+            Optional<UserEntity> userOptional = userRepository.findByUsername(request.getUsername());
+
+            if (userOptional.isEmpty()) {
+                throw new RuntimeException("User not found");
+            }
+
+            UserEntity user = userOptional.get();
+
+            LoginResponse response = new LoginResponse();
+            response.setId(user.getId());
+            response.setUsername(user.getUsername());
+            response.setRole("ROLE_USER");
+
+            return ResponseEntity.ok(response);
+           
             
         } catch (Exception e) {
             return ResponseEntity.status(401).body(e.getMessage());
