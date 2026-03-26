@@ -1,180 +1,121 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-/*
-  Josh's Custom CSS Reset
-  https://www.joshwcomeau.com/css/custom-css-reset/
-*/
-
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-*:not(dialog) {
-  margin: 0;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    interpolate-size: allow-keywords;
-  }
-}
-
+*, *::before, *::after { box-sizing: border-box; }
+*:not(dialog) { margin: 0; }
 body {
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  font-family: "Montserrat", sans-serif;
-  background-color: var(--color-container);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    font-family: "Montserrat", sans-serif;
+    background-color: var(--color-container);
 }
-
-img, picture, video, canvas, svg {
-  display: block;
-  max-width: 100%;
-}
-
-input, button, textarea, select {
-  font: inherit;
-}
-
-p, h1, h2, h3, h4, h5, h6 {
-  overflow-wrap: break-word;
-  font-family: inherit;
-}
-
-p {
-  text-wrap: pretty;
-}
-h1, h2, h3, h4, h5, h6 {
-  text-wrap: balance;
-}
-
-#root, #__next {
-  isolation: isolate;
-}
-
-a{
-    text-decoration: none;
-}
+img, picture, video, canvas, svg { display: block; max-width: 100%; }
+input, button, textarea, select { font: inherit; }
+p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; font-family: inherit; }
+p { text-wrap: pretty; }
+h1, h2, h3, h4, h5, h6 { text-wrap: balance; }
+a { text-decoration: none; }
 
 :root {
-  /* Màu nền trang */
-  --color-background: #f5f2ed;   /* giấy cũ, beige nhẹ */
-  --color-container: #efe8db;    /* container nhạt hơn nền để tạo chiều sâu */
-
-  /* Màu chữ */
-  --color-text-main: #3b2f2f;    /* nâu sẫm, dễ đọc */
-  --color-text-secondary: #5c4a3d; /* nâu nhạt hơn cho subtitle / caption */
-  --color-text-accent: #7c5e3c;  /* nâu đỏ ấm để nhấn nhá link / highlight */
-
-  /* Màu nút / link / accent */
-  --color-accent: #b77e4b;       /* nâu vàng ấm, tạo điểm nhấn */
-  --color-accent-hover: #d1670b; /* hover đậm hơn */
-
-  /* Border, divider */
-  --color-border: #d4c3b0;       /* nâu nhạt / sepia */
-
-  --body-font: "Montserrat", sans-serif;
-  --second-font: "Dancing Script", cursive;
-  --biggest-font-size: 3rem;
-  --bigger-font-size: 2rem;
-  --h1-font-size: 1.5rem;
-  --h2-font-size: 1.25rem;
-  --h3-font-size: 1rem;
-  --normal-font-size: .938rem;
-  --small-font-size: .813rem;
-  
-  --font-regular: 400;
-  --font-semi-bold: 600;
-  --font-bold: 700;
+    --color-background: #f5f2ed;
+    --color-container: #efe8db;
+    --color-text-main: #3b2f2f;
+    --color-text-secondary: #5c4a3d;
+    --color-text-accent: #7c5e3c;
+    --color-accent: #b77e4b;
+    --color-accent-hover: #d1670b;
+    --color-border: #d4c3b0;
+    --font-regular: 400;
+    --font-semi-bold: 600;
+    --font-bold: 700;
+    --biggest-font-size: 3rem;
+    --bigger-font-size: 2rem;
+    --h1-font-size: 1.5rem;
+    --h2-font-size: 1.25rem;
+    --h3-font-size: 1rem;
+    --normal-font-size: .938rem;
+    --small-font-size: .813rem;
 }
 
-/* style sign in */
-
-.sign_in{
-    height: 100vh;
-    width: 100vw;
-
+/* ── Layout ── */
+.sign_in {
+    min-height: 100vh;
     display: flex;
+    flex-direction: row;
 }
 
-.sign_in .image{
+.sign_in .image {
     flex-shrink: 0;
     width: fit-content;
-    height: 100vh;
     z-index: 2;
     overflow: hidden;
-    border-radius: 10px;
-    box-shadow: 0 0 10px 1px rgb(115, 115, 115);
+    border-radius: 0 10px 10px 0;
+    box-shadow: 0 0 10px 1px rgb(115 115 115 / .6);
 }
-
-.sign_in .image img{
+.sign_in .image img {
     height: 100vh;
+    width: auto;
     object-fit: cover;
 }
 
-.sign_in .form_signin{
+.sign_in .form_signin {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    max-height: 100vh;
+    min-height: 100vh;
 }
 
-.sign_in .form_signin .head_form,
-.sign_in .form_signin .body_form,
-.sign_in .form_signin .foot_form{
-    height: calc(100vh / 3);
-}
-
-.sign_in .form_signin .head_form{
+/* Head */
+.sign_in .form_signin .head_form {
+    flex: 1;
     display: flex;
+    flex-direction: column;
     padding: 2rem;
-    flex-direction: column;
     background-color: var(--color-background);
 }
-
-.sign_in .form_signin .head_form .description{
+.sign_in .form_signin .head_form .description {
     font-weight: var(--font-semi-bold);
     margin-top: 1rem;
 }
 
-.sign_in .form_signin .body_form{
+/* Body */
+.sign_in .form_signin .body_form {
+    flex: 1;
     background-color: var(--color-container);
     color: var(--color-text-main);
-    padding: 0 2rem;
+    padding: 1.5rem 2rem;
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-start;
     align-items: center;
-    gap: 6rem;
-    box-shadow: 0 0 20px 1px rgb(172, 171, 171);
+    gap: 1.5rem;
+    box-shadow: 0 0 20px 1px rgb(172 171 171 / .6);
     z-index: 1;
 }
-
-.sign_in .form_signin .body_form .left{
+.sign_in .form_signin .body_form .left,
+.sign_in .form_signin .body_form .right {
     display: flex;
     flex-direction: column;
 }
-
-.sign_in .form_signin .body_form .right{
-    display: flex;
-    flex-direction: column;
-}
-
-.sign_in .form_signin .body_form label{
+.sign_in .form_signin .body_form label {
     display: block;
     font-weight: var(--font-bold);
     margin-bottom: 0.2rem;
 }
-
-.sign_in .form_signin .body_form div > div{
+.sign_in .form_signin .body_form div > div {
     margin-bottom: 0.5rem;
 }
 
-.sign_in .form_signin .foot_form{
-    padding: 2rem;
+/* Foot */
+.sign_in .form_signin .foot_form {
+    flex: 1;
+    padding: 1.5rem 2rem;
     background-color: var(--color-background);
     color: var(--color-text-main);
     font-size: var(--normal-font-size);
     font-weight: var(--font-semi-bold);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
-
-.sign_in .form_signin .foot_form button[type="submit"]{
+.sign_in .form_signin .foot_form button[type="submit"] {
     padding: 0.8rem 2rem;
     font-size: var(--h2-font-size);
     margin-bottom: 1rem;
@@ -183,74 +124,59 @@ a{
     color: white;
     border-radius: 10px;
     transition: 0.3s ease;
-    box-shadow: 0 0 10px 1px rgb(115, 115, 115);
+    box-shadow: 0 0 10px 1px rgb(115 115 115 / .5);
+    align-self: flex-start;
 }
-
-.sign_in .form_signin .foot_form button[type="submit"]:hover{
+.sign_in .form_signin .foot_form button[type="submit"]:hover {
     background-color: var(--color-accent-hover);
     cursor: pointer;
-    padding: 0.8rem 2.5rem
+    padding: 0.8rem 2.5rem;
 }
-
-.sign_in .form_signin .foot_form .log{
+.sign_in .form_signin .foot_form .log {
     font-weight: var(--font-bold);
     font-size: var(--h2-font-size);
     color: var(--color-accent);
     transition: 0.3s ease;
 }
-
-.sign_in .form_signin .foot_form .log:hover{
+.sign_in .form_signin .foot_form .log:hover {
     color: var(--color-accent-hover);
     cursor: pointer;
 }
 
-.sign_in .form_signin .body_form input{
+/* Inputs */
+.sign_in .form_signin .body_form input {
     border-radius: 4px;
     border: 2px solid var(--color-accent);
-}
-
-.sign_in .form_signin .body_form input:focus{
-    border: 2px solid var(--color-accent-hover);
-}
-
-.sign_in .form_signin .body_form input{
     outline: none;
     padding: 0.2rem;
     height: 2.2rem;
     width: 15rem;
+    max-width: 100%;
     font-weight: var(--font-semi-bold);
     color: var(--color-text-accent);
 }
-
-.sign_in .form_signin .body_form input:user-invalid{
+.sign_in .form_signin .body_form input:focus {
+    border: 2px solid var(--color-accent-hover);
+}
+.sign_in .form_signin .body_form input:user-invalid {
     border: 2px solid red;
 }
-
-.sign_in .form_signin .body_form input:user-invalid + span::after{
-    content: "✖";
-    color: red;
+.sign_in .form_signin .body_form input:user-invalid + span::after {
+    content: "✖"; color: red;
 }
-
-.sign_in .form_signin .body_form input:user-valid + span::after{
-    content: "✓";
-    color: green;
+.sign_in .form_signin .body_form input:user-valid + span::after {
+    content: "✓"; color: green;
 }
-
-.sign_in .form_signin .body_form input[type="email"]{
+.sign_in .form_signin .body_form input[type="email"] {
     width: 18rem;
+    max-width: 100%;
 }
-
-.sign_in .form_signin .body_form input:user-invalid{
-    border: 2px solid red;
-}
-
-.sign_in .form_signin .body_form input + span{
+.sign_in .form_signin .body_form input + span {
     position: relative;
 }
-
-.sign_in .form_signin .body_form input[type="text"] + span::before, 
+.sign_in .form_signin .body_form input[type="text"] + span::before,
 .sign_in .form_signin .body_form input[type="email"] + span::before,
-.sign_in .form_signin .body_form input[type="password"] + span::before{
+.sign_in .form_signin .body_form input[type="password"] + span::before {
     content: "required";
     position: absolute;
     display: block;
@@ -264,34 +190,95 @@ a{
     bottom: 30px;
 }
 
-.sign_in .form_signin .body_form .password_field{
+/* Password rule tooltip */
+.sign_in .form_signin .body_form .password_field {
     position: relative;
 }
-
-.sign_in .form_signin .body_form .password_field .password_rule{
+.sign_in .form_signin .body_form .password_field .password_rule {
     position: absolute;
     width: 18rem;
     left: 240px;
     top: 8px;
     visibility: hidden;
 }
-
-.sign_in .form_signin .body_form .password_field .password_rule li.valid{
+.sign_in .form_signin .body_form .password_field .password_rule li.valid {
     color: green;
 }
-
-.sign_in .form_signin .body_form .password_field:focus-within .password_rule{
+.sign_in .form_signin .body_form .password_field:focus-within .password_rule {
     visibility: visible;
 }
 
-.sign_in .form_signin .foot_form .sign{
+/* Sign link */
+.sign_in .form_signin .foot_form .sign {
     color: var(--color-accent);
     font-size: var(--h2-font-size);
     font-weight: var(--font-bold);
     transition: 0.3s ease;
 }
-
-.sign_in .form_signin .foot_form .sign:hover{
+.sign_in .form_signin .foot_form .sign:hover {
     cursor: pointer;
     color: var(--color-accent-hover);
+}
+
+/* ── MOBILE ( ≤ 640px ) ── */
+@media (max-width: 640px) {
+    .sign_in {
+        flex-direction: column;
+        min-height: 100vh;
+    }
+    .sign_in .image {
+        display: none;
+    }
+    .sign_in .form_signin {
+        min-height: 100vh;
+        flex: unset;
+    }
+    .sign_in .form_signin .head_form,
+    .sign_in .form_signin .body_form,
+    .sign_in .form_signin .foot_form {
+        flex: unset;
+        height: auto;
+    }
+    .sign_in .form_signin .head_form {
+        padding: 1.5rem;
+    }
+    .sign_in .form_signin .body_form {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 1.5rem;
+    }
+    .sign_in .form_signin .body_form .password_field .password_rule {
+        position: static;
+        width: 100%;
+        visibility: visible;
+        font-size: var(--small-font-size);
+        margin-top: 0.25rem;
+    }
+    .sign_in .form_signin .body_form input,
+    .sign_in .form_signin .body_form input[type="email"] {
+        width: 100%;
+    }
+    .sign_in .form_signin .foot_form {
+        padding: 1.5rem;
+    }
+    .sign_in .form_signin .foot_form button[type="submit"] {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ── TABLET ( 641px – 1024px ) ── */
+@media (min-width: 641px) and (max-width: 1024px) {
+    .sign_in .image img {
+        width: 220px;
+        height: 100vh;
+    }
+    .sign_in .form_signin .body_form {
+        gap: 2rem;
+    }
+    .sign_in .form_signin .body_form .password_field .password_rule {
+        left: auto;
+        right: -200px;
+    }
 }

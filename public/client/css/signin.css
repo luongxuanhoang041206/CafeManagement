@@ -1,0 +1,254 @@
+*, *::before, *::after { box-sizing: border-box; }
+*:not(dialog) { margin: 0; }
+body {
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    font-family: "Montserrat", sans-serif;
+    background-color: var(--color-container);
+}
+img, picture, video, canvas, svg { display: block; max-width: 100%; }
+input, button, textarea, select { font: inherit; }
+p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; font-family: inherit; }
+p { text-wrap: pretty; }
+h1, h2, h3, h4, h5, h6 { text-wrap: balance; }
+a { text-decoration: none; }
+
+:root {
+    --color-background: #f5f2ed;
+    --color-container: #efe8db;
+    --color-text-main: #3b2f2f;
+    --color-text-secondary: #5c4a3d;
+    --color-text-accent: #7c5e3c;
+    --color-accent: #b77e4b;
+    --color-accent-hover: #d1670b;
+    --color-border: #d4c3b0;
+    --font-regular: 400;
+    --font-semi-bold: 600;
+    --font-bold: 700;
+    --biggest-font-size: 3rem;
+    --bigger-font-size: 2rem;
+    --h1-font-size: 1.5rem;
+    --h2-font-size: 1.25rem;
+    --h3-font-size: 1rem;
+    --normal-font-size: .938rem;
+    --small-font-size: .813rem;
+}
+
+/* ── Layout ── */
+.sign_in {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.sign_in .image {
+    flex-shrink: 0;
+    width: fit-content;
+    z-index: 2;
+    overflow: hidden;
+    border-radius: 0 10px 10px 0;
+    box-shadow: 0 0 10px 1px rgb(115 115 115 / .6);
+}
+.sign_in .image img {
+    height: 100vh;
+    width: auto;
+    object-fit: cover;
+}
+
+.sign_in .form_signin {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Head */
+.sign_in .form_signin .head_form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    background-color: var(--color-background);
+}
+.sign_in .form_signin .head_form .description {
+    font-weight: var(--font-semi-bold);
+    margin-top: 1rem;
+}
+
+/* Body */
+.sign_in .form_signin .body_form {
+    flex: 2;
+    background-color: var(--color-container);
+    color: var(--color-text-main);
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2rem;
+    box-shadow: 0 0 20px 1px rgb(172 171 171 / .6);
+    z-index: 1;
+}
+.sign_in .form_signin .body_form .left,
+.sign_in .form_signin .body_form .right {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.sign_in .form_signin .body_form label {
+    display: block;
+    font-weight: var(--font-bold);
+    margin-bottom: 0.2rem;
+}
+.sign_in .form_signin .body_form div > div {
+    margin-bottom: 0.5rem;
+}
+
+/* Foot */
+.sign_in .form_signin .foot_form {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    background-color: var(--color-background);
+    color: var(--color-text-main);
+    font-size: var(--normal-font-size);
+    font-weight: var(--font-semi-bold);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.sign_in .form_signin .foot_form button[type="submit"] {
+    padding: 0.8rem 2rem;
+    font-size: var(--h2-font-size);
+    margin-bottom: 1rem;
+    background-color: var(--color-accent);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    transition: 0.3s ease;
+    box-shadow: 0 0 10px 1px rgb(115 115 115 / .5);
+    align-self: flex-start;
+}
+.sign_in .form_signin .foot_form button[type="submit"]:hover {
+    background-color: var(--color-accent-hover);
+    cursor: pointer;
+    padding: 0.8rem 2.5rem;
+}
+.sign_in .form_signin .foot_form .log {
+    font-weight: var(--font-bold);
+    font-size: var(--h2-font-size);
+    color: var(--color-accent);
+    transition: 0.3s ease;
+}
+.sign_in .form_signin .foot_form .log:hover {
+    color: var(--color-accent-hover);
+    cursor: pointer;
+}
+
+/* Inputs */
+.sign_in .form_signin .body_form input {
+    border-radius: 4px;
+    border: 2px solid var(--color-accent);
+    outline: none;
+    padding: 0.2rem;
+    height: 2.2rem;
+    width: 15rem;
+    max-width: 100%;
+    font-weight: var(--font-semi-bold);
+    color: var(--color-text-accent);
+}
+.sign_in .form_signin .body_form input:focus {
+    border: 2px solid var(--color-accent-hover);
+}
+.sign_in .form_signin .body_form input:user-invalid {
+    border: 2px solid red;
+}
+.sign_in .form_signin .body_form input:user-invalid + span::after {
+    content: "✖"; color: red;
+}
+.sign_in .form_signin .body_form input:user-valid + span::after {
+    content: "✓"; color: green;
+}
+.sign_in .form_signin .body_form input[type="email"] {
+    width: 18rem;
+    max-width: 100%;
+}
+.sign_in .form_signin .body_form input + span {
+    position: relative;
+}
+.sign_in .form_signin .body_form input[type="text"] + span::before,
+.sign_in .form_signin .body_form input[type="email"] + span::before,
+.sign_in .form_signin .body_form input[type="password"] + span::before {
+    content: "required";
+    position: absolute;
+    display: block;
+    background-color: var(--color-text-secondary);
+    font-weight: var(--font-bold);
+    color: white;
+    font-size: var(--small-font-size);
+    width: 4rem;
+    text-align: center;
+    right: 1px;
+    bottom: 30px;
+}
+
+/* Confirm password mismatch */
+.sign_in .form_signin .body_form input#confirm.mismatch {
+    border: 2px solid red;
+}
+.sign_in .form_signin .body_form .confirm_password .error_msg {
+    font-size: var(--small-font-size);
+    color: red;
+    min-height: 1rem;
+}
+
+/* ── MOBILE ( ≤ 640px ) ── */
+@media (max-width: 640px) {
+    .sign_in {
+        flex-direction: column;
+        min-height: 100vh;
+    }
+    .sign_in .image {
+        display: none;
+    }
+    .sign_in .form_signin {
+        min-height: 100vh;
+        flex: unset;
+    }
+    .sign_in .form_signin .head_form,
+    .sign_in .form_signin .body_form,
+    .sign_in .form_signin .foot_form {
+        flex: unset;
+        height: auto;
+    }
+    .sign_in .form_signin .head_form {
+        padding: 1.5rem;
+    }
+    .sign_in .form_signin .body_form {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        padding: 1.5rem;
+    }
+    .sign_in .form_signin .body_form input,
+    .sign_in .form_signin .body_form input[type="email"] {
+        width: 100%;
+    }
+    .sign_in .form_signin .foot_form {
+        padding: 1.5rem;
+    }
+    .sign_in .form_signin .foot_form button[type="submit"] {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ── TABLET ( 641px – 1024px ) ── */
+@media (min-width: 641px) and (max-width: 1024px) {
+    .sign_in .image img {
+        width: 220px;
+        height: 100vh;
+    }
+    .sign_in .form_signin .body_form {
+        gap: 2rem;
+    }
+}
