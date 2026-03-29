@@ -153,7 +153,7 @@ public class OrderServiceImpl implements OrderService {
         OrderEntity order = new OrderEntity();
         order.setOrderSource("ONLINE"); // client luôn là online
         order.setUserId(request.getUserId());
-        order.setStatus("PENDING");
+        order.setStatus("pending");
         order.setMethodPayment(request.getMethodPayment());
         order.setAddress(request.getAddress());
 
@@ -196,9 +196,9 @@ public class OrderServiceImpl implements OrderService {
         payment.setAmount(totalAmount);
 
         if ("CASH".equals(request.getMethodPayment())) {
-            payment.setStatus("UNPAID");
+            payment.setStatus("pending");
         } else {
-            payment.setStatus("PAID");
+            payment.setStatus("success");
             payment.setPaidAt(LocalDateTime.now());
         }
 

@@ -8,6 +8,6 @@ import com.example.demo.entity.PaymentEntity;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
-	@Query("SELECT SUM(p.amount) FROM PaymentEntity p WHERE p.status = 'success'")
+	@Query("SELECT SUM(p.amount) FROM PaymentEntity p WHERE p.status = 'PAID'")
 	Long getTotalRevenue();
 }
