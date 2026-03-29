@@ -2,7 +2,6 @@ package com.example.demo.dto.response;
 
 import java.util.List;
 
-import com.example.demo.entity.ActivityLog;
 
 import lombok.Data;
 
@@ -12,6 +11,5 @@ public class AdminDashboardResponse  {
 	private Long revenue;
 	private Long totalUsers;
 	private Long totalEmployee;
-	
-	private List<ActivityLog> recentActivities;
+
 }

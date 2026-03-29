@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.response.AdminDashboardResponse;
-import com.example.demo.entity.ActivityLog;
-import com.example.demo.repository.ActivityRepository;
 import com.example.demo.repository.EmployeeRepository;
 import com.example.demo.repository.PaymentRepository;
 import com.example.demo.repository.ProductRepository;
@@ -29,9 +27,6 @@ public class DashboardServiceImpl implements DashboardService {
     @Autowired
     private PaymentRepository paymentRepository;
 
-    @Autowired
-    private ActivityRepository activityRepository;
-
 	@Override
 	public AdminDashboardResponse getDashboard(String role) {
 		AdminDashboardResponse res = new AdminDashboardResponse();
@@ -43,21 +38,6 @@ public class DashboardServiceImpl implements DashboardService {
 		Long revenue = paymentRepository.getTotalRevenue();
 		res.setRevenue(revenue != null ? revenue : 0);
 		
-		List<ActivityLog> activities = activityRepository.findTop10ByOrderByCreatedAtDesc();
-		
-		if("ROlE_MANAGER".equals(role)) {
-			activities = activities.stream()
-					.filter(a -> !a.getType().equals("USER"))
-					.toList();
-		}
-		
-		if("ROLE_STAFF".equals(role)) {
-			activities = activities.stream()
-					.filter(a -> !a.getType().equals("ORDER"))
-					.toList();
-		}
-		
-		res.setRecentActivities(activities);
 		return res;
 	}
 
