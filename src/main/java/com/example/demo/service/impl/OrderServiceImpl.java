@@ -1,6 +1,10 @@
 package com.example.demo.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,14 +16,18 @@ import com.example.demo.dto.request.CreateOrderItemRequest;
 import com.example.demo.dto.request.CreateOrderRequest;
 import com.example.demo.dto.response.AdminOrderResponse;
 import com.example.demo.dto.response.OrderResponse;
+import com.example.demo.entity.IngredientEntity;
 import com.example.demo.entity.OrderEntity;
 import com.example.demo.entity.OrderItemEntity;
 import com.example.demo.entity.PaymentEntity;
+import com.example.demo.entity.ProductIngredientEntity;
 import com.example.demo.mapper.OrderMapperToAdmin;
 import com.example.demo.mapper.OrderMapperToClient;
+import com.example.demo.repository.IngredientRepository;
 import com.example.demo.repository.OrderItemRepository;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.PaymentRepository;
+import com.example.demo.repository.ProductIngredientRepository;
 import com.example.demo.dto.request.ClientCreateOrderRequest;
 import com.example.demo.dto.response.ClientOrderResponse;
 import com.example.demo.service.OrderService;
@@ -31,6 +39,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository repo;
     private final OrderItemRepository orderItemRepository;
     private final PaymentRepository paymentRepository;
+    private final ProductIngredientRepository productingredientRepository;
+    private final IngredientRepository ingredientRepository;
     private final OrderMapperToClient mapper;
 	private final OrderMapperToAdmin mapperAdmin;
 
@@ -38,12 +48,16 @@ public class OrderServiceImpl implements OrderService {
             OrderRepository repo,
             OrderItemRepository orderItemRepository,
             PaymentRepository paymentRepository,
+            ProductIngredientRepository productIngredientRepository,
+            IngredientRepository ingredientRepository,
             OrderMapperToClient mapper,
             OrderMapperToAdmin mapperAdmin
     ) {
         this.repo = repo;
         this.orderItemRepository = orderItemRepository;
         this.paymentRepository = paymentRepository;
+        this.productingredientRepository = productIngredientRepository;
+        this.ingredientRepository = ingredientRepository;
         this.mapper = mapper;
         this.mapperAdmin = mapperAdmin;
     }
@@ -79,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public AdminOrderResponse create(CreateOrderRequest request) {
-
+    	
         //  create order
         OrderEntity order = new OrderEntity();
         order.setOrderSource(request.getOrderSource());
@@ -145,10 +159,58 @@ public class OrderServiceImpl implements OrderService {
         OrderEntity updatedOrder = repo.save(order);
         return mapperAdmin.toAdmin(updatedOrder);
     }
-
+    @Transactional
     @Override
     public ClientOrderResponse clientCreate(ClientCreateOrderRequest request) {
-
+    	
+    	if(request.getItems() == null || request.getItems().isEmpty()) {
+    		throw new RuntimeException("Order must contain at least one item");
+    	}
+    	
+    	// Tinh tong nguyen lieu can 
+    	Map<Long, Long> requiredIngredients = new HashMap<>();
+    	
+    	for(CreateOrderItemRequest item : request.getItems()) {
+    		List<ProductIngredientEntity> recipe = productingredientRepository.findByProductId(item.getProductId());
+    		
+    		for(ProductIngredientEntity pi : recipe) {
+    			Long ingredientId = pi.getIngredientId();
+    			
+    			Long need = pi.getAmount() * item.getQuantity();
+    			
+    			if (requiredIngredients.containsKey(ingredientId)) {
+    			    Long oldValue = requiredIngredients.get(ingredientId);
+    			    requiredIngredients.put(ingredientId, oldValue + need);
+    			} else {
+    			    requiredIngredients.put(ingredientId, need);
+    			}
+    		}
+    		
+    	}
+    	
+    	List<IngredientEntity> ingredients = ingredientRepository.findAllByIdForUpdate(requiredIngredients.keySet());
+    	
+    	// convert sang map
+    	Map<Long, IngredientEntity> ingredientMap = ingredients.stream()
+    			.collect(Collectors.toMap(IngredientEntity::getId, i -> i));
+    	// Check du 
+    	for(Map.Entry<Long, Long> entry : requiredIngredients.entrySet()) {
+    		IngredientEntity in = ingredientMap.get(entry.getKey());
+    		
+    		if(in.getStock().compareTo(entry.getValue()) < 0) {
+    			throw new RuntimeException("Not enough ingredient: " + in.getName());
+    		}
+    	}
+    	
+    	// Tru stock
+    	for(Map.Entry<Long, Long> entry : requiredIngredients.entrySet()) {
+    		IngredientEntity in = ingredientMap.get(entry.getKey());
+    		
+    		in.setStock(in.getStock() - entry.getValue());
+    	}
+    	
+    	ingredientRepository.saveAll(ingredients);
+    	
         // 1. Create order
         OrderEntity order = new OrderEntity();
         order.setOrderSource("ONLINE"); // client luôn là online

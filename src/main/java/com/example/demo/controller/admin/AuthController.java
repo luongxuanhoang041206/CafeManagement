@@ -55,8 +55,6 @@ public class AuthController  {
             .map(a -> a.getAuthority())
             .orElse("UNKNOWN"));
         
-        
-
         return ResponseEntity.ok(response);
     }
 }

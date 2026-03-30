@@ -10,7 +10,7 @@ import com.example.demo.repository.EmployeeRepository;
 
 @Service
 public class CustomEmployeeDetailService implements UserDetailsService {
-
+// do db va spring ko noi cung ngon ngu 
     @Autowired
     private EmployeeRepository employeeRepository;
 
@@ -21,7 +21,7 @@ public class CustomEmployeeDetailService implements UserDetailsService {
         EmployeeEntity employee = employeeRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
+        // convert sang userDetail
         return User.builder()
                 .username(employee.getUsername()) 
                 .password(employee.getPassword())
