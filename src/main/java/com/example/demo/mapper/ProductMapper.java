@@ -24,7 +24,8 @@ public class ProductMapper {
                 p.getPrice(),
                 p.getActive(),
                 p.getGroupId(),
-                p.getImageUrl()
+                p.getImageUrl(),
+                p.isAvailable()
         );
     }
 }

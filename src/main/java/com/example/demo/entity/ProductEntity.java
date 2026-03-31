@@ -26,4 +26,5 @@ public class ProductEntity {
     private Date createdAt;
     private Date deletedAt;
     private String imageUrl;
+	private boolean available;
 }

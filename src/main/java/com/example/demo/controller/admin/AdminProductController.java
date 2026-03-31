@@ -1,5 +1,7 @@
 package com.example.demo.controller.admin;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -65,5 +67,10 @@ public class AdminProductController {
     @GetMapping("/{id}")
     public AdminProductResponse detail(@PathVariable Long id) {
     	return service.detail(id);
+    }
+    // Xem san pham available
+    @GetMapping("/available")
+    public List<AdminProductResponse> available() {
+    	return service.available();
     }
 }

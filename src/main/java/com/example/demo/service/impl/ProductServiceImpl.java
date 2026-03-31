@@ -3,15 +3,22 @@ package com.example.demo.service.impl;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.example.demo.dto.request.CreateProductRequest;
 import com.example.demo.dto.request.UpdateProductRequest;
 import com.example.demo.dto.response.AdminProductResponse;
 import com.example.demo.dto.response.ProductResponse;
+import com.example.demo.entity.IngredientEntity;
 import com.example.demo.entity.ProductEntity;
+import com.example.demo.entity.ProductIngredientEntity;
 import com.example.demo.mapper.ProductMapper;
+import com.example.demo.repository.IngredientRepository;
+import com.example.demo.repository.ProductIngredientRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.ProductService;
 import com.example.demo.specification.ProductSpecification;
@@ -24,14 +31,21 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repo;
     private final ProductMapper mapper;
+    private final IngredientRepository ingredientRepository;
+    private final ProductIngredientRepository productIngredientRepository;
 
-    public ProductServiceImpl(ProductRepository repo,
-                              ProductMapper mapper) {
-        this.repo = repo;
-        this.mapper = mapper;
-    }
+    
 
-    @Override
+    public ProductServiceImpl(ProductRepository repo, ProductMapper mapper, IngredientRepository ingredientRepository,
+			ProductIngredientRepository productIngredientRepository) {
+
+		this.repo = repo;
+		this.mapper = mapper;
+		this.ingredientRepository = ingredientRepository;
+		this.productIngredientRepository = productIngredientRepository;
+	}
+
+	@Override
     public List<ProductResponse> getAllForClient() {
         return repo.findByActiveTrue()
                    .stream()
@@ -166,5 +180,46 @@ public class ProductServiceImpl implements ProductService {
         Page<ProductEntity> productPage = repo.findAll(spec, pageable);
 
         return productPage.map(mapper::toClient);
+    }
+    
+    @Override
+    public List<AdminProductResponse> available() {
+
+        List<ProductEntity> products = repo.findAll();
+
+        Map<Long, IngredientEntity> ingredientMap =
+                ingredientRepository.findAll().stream()
+                        .collect(Collectors.toMap(IngredientEntity::getId, i -> i));
+
+        Map<Long, List<ProductIngredientEntity>> recipeMap =
+                productIngredientRepository.findAll().stream()
+                        .collect(Collectors.groupingBy(ProductIngredientEntity::getProductId));
+
+        List<AdminProductResponse> result = new ArrayList<>();
+
+        for (ProductEntity p : products) {
+
+            boolean available = true;
+
+            List<ProductIngredientEntity> recipe = recipeMap.get(p.getId());
+
+            if (recipe != null) {
+                for (ProductIngredientEntity pi : recipe) {
+                    IngredientEntity in = ingredientMap.get(pi.getIngredientId());
+
+                    if (in.getStock() < pi.getAmount()) {
+                        available = false;
+                        break;
+                    }
+                }
+            }
+
+            AdminProductResponse res = mapper.toAdmin(p);
+            res.setAvailable(available); 
+
+            result.add(res);
+        }
+
+        return result;
     }
 }

@@ -24,4 +24,5 @@ public interface ProductService {
 			Pageable pageable);
 	Page<ProductResponse> searchForClient(String name, Double minPrice, Double maxPrice, Long groupId, int page,
 			int size);
+	List<AdminProductResponse> available();
 }

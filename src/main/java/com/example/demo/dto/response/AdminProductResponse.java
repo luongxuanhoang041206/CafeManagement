@@ -11,14 +11,16 @@ public class AdminProductResponse {
     private boolean active;
     private Long groupId;
     private String imageUrl;
+    private boolean available;
 
     public AdminProductResponse(Long id, String name,
-                                double price, boolean active, Long groupId, String imageUrl) {
+                                double price, boolean active, Long groupId, String imageUrl, boolean available) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.active = active;
         this.groupId = groupId;
         this.imageUrl = imageUrl;
+        this.available = available;
     }
 }
