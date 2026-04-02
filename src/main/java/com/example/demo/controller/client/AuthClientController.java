@@ -19,6 +19,7 @@ import com.example.demo.dto.request.SignupRequest;
 import com.example.demo.dto.response.LoginResponse;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.security.LogoutSupport;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -103,6 +104,11 @@ public class AuthClientController {
         
 
         return "Register success";
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest httpRequest) {
+        return LogoutSupport.logout(httpRequest);
     }
 }
 

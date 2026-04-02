@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.demo.dto.request.LoginAdminRequest;
 import com.example.demo.entity.EmployeeEntity;
 import com.example.demo.repository.EmployeeRepository;
+import com.example.demo.security.LogoutSupport;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -56,5 +57,10 @@ public class AuthController  {
             .orElse("UNKNOWN"));
         
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest httpRequest) {
+        return LogoutSupport.logout(httpRequest);
     }
 }
