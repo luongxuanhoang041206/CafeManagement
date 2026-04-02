@@ -11,7 +11,7 @@ import jakarta.persistence.criteria.Predicate;
 public class UserSpecification {
 
     public static Specification<UserEntity> filter(
-            String name
+            String username
 //            String position,
 //            Double minSalary,
 //            Double maxSalary
@@ -21,11 +21,11 @@ public class UserSpecification {
 
             ArrayList<Predicate> predicates = new ArrayList<>();
 
-            if (name != null) {
+            if (username != null) {
                 predicates.add(
                         cb.like(
                                 cb.lower(root.get("name")),
-                                "%" + name.toLowerCase() + "%"
+                                "%" + username.toLowerCase() + "%"
                         )
                 );
             }

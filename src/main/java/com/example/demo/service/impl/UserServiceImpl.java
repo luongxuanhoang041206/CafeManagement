@@ -25,10 +25,10 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public Page<AdminUserResponse> search(
-			String name,
+			String username,
 			Pageable pageable
 		) {
-		Specification<UserEntity> spec = UserSpecification.filter(name);
+		Specification<UserEntity> spec = UserSpecification.filter(username);
 		Page<UserEntity> userPage = repo.findAll(spec, pageable);
 		return userPage.map(mapper::toAdmin);
 	}

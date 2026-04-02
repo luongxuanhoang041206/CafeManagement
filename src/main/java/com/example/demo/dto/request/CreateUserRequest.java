@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class CreateUserRequest  {
 	private Long id;
-	private String name;
+	private String username;
 	private String password;
 	private String email;
 	private boolean active;
@@ -15,7 +15,7 @@ public class CreateUserRequest  {
 	private String role;
 	public CreateUserRequest(Long id, String name, String password, String email, boolean active, Date created_at, String role) {
 		this.id = id;
-		this.name = name;
+		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.active = active;

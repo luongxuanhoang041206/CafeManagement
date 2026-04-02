@@ -7,7 +7,7 @@ import com.example.demo.dto.response.AdminUserResponse;
 
 
 public interface UserService  {
-	Page<AdminUserResponse> search(String name, Pageable pageable);
+	Page<AdminUserResponse> search(String username, Pageable pageable);
 	void changeActive(Long id);
 	void deleteUser(Long id);
 }

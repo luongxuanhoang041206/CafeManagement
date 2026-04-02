@@ -22,12 +22,12 @@ public class AdminUserController  {
 	// Lay danh sach user
 	@GetMapping
 	public Page<AdminUserResponse> search(
-			@RequestParam(required = false) String name,
+			@RequestParam(required = false) String username,
 			@RequestParam(defaultValue="0") int page,
 			@RequestParam(defaultValue="6") int size
 	) {
 		Pageable pageable = PageRequest.of(page, size);
-		return service.search(name, pageable);
+		return service.search(username, pageable);
 	}
 	// Doi trang thai user
 	@PatchMapping("/{id}/active")

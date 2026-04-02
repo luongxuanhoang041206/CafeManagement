@@ -10,7 +10,7 @@ public class UserMapper  {
 	public AdminUserResponse toAdmin(UserEntity u) {
 		return new AdminUserResponse(
 				u.getId(),
-				u.getName(),
+				u.getUsername(),
 				u.getPassword(),
 				u.getEmail(),
 				u.isActive(),
