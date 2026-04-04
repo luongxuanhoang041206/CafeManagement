@@ -1,9 +1,11 @@
 package com.example.demo.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -21,13 +23,19 @@ import com.example.demo.entity.OrderEntity;
 import com.example.demo.entity.OrderItemEntity;
 import com.example.demo.entity.PaymentEntity;
 import com.example.demo.entity.ProductIngredientEntity;
+import com.example.demo.entity.ProductEntity;
+import com.example.demo.entity.UserEntity;
+import com.example.demo.entity.EmployeeEntity;
 import com.example.demo.mapper.OrderMapperToAdmin;
 import com.example.demo.mapper.OrderMapperToClient;
+import com.example.demo.repository.EmployeeRepository;
 import com.example.demo.repository.IngredientRepository;
 import com.example.demo.repository.OrderItemRepository;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.PaymentRepository;
+import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.ProductIngredientRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.dto.request.ClientCreateOrderRequest;
 import com.example.demo.dto.response.ClientOrderResponse;
 import com.example.demo.service.OrderService;
@@ -43,6 +51,9 @@ public class OrderServiceImpl implements OrderService {
     private final IngredientRepository ingredientRepository;
     private final OrderMapperToClient mapper;
 	private final OrderMapperToAdmin mapperAdmin;
+    private final UserRepository userRepository;
+    private final EmployeeRepository employeeRepository;
+    private final ProductRepository productRepository;
 
     public OrderServiceImpl(
             OrderRepository repo,
@@ -51,7 +62,10 @@ public class OrderServiceImpl implements OrderService {
             ProductIngredientRepository productIngredientRepository,
             IngredientRepository ingredientRepository,
             OrderMapperToClient mapper,
-            OrderMapperToAdmin mapperAdmin
+            OrderMapperToAdmin mapperAdmin,
+            UserRepository userRepository,
+            EmployeeRepository employeeRepository,
+            ProductRepository productRepository
     ) {
         this.repo = repo;
         this.orderItemRepository = orderItemRepository;
@@ -60,6 +74,9 @@ public class OrderServiceImpl implements OrderService {
         this.ingredientRepository = ingredientRepository;
         this.mapper = mapper;
         this.mapperAdmin = mapperAdmin;
+        this.userRepository = userRepository;
+        this.employeeRepository = employeeRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -146,7 +163,28 @@ public class OrderServiceImpl implements OrderService {
     public AdminOrderResponse detail(Long id) {
     	OrderEntity order = repo.findById(id)
     			.orElseThrow(() -> new RuntimeException("Not found"));
-    	return mapperAdmin.toAdmin(order);	
+    	AdminOrderResponse response = mapperAdmin.toAdmin(order);
+    	response.setAddress(order.getAddress());
+
+    	if (order.getTableId() != null && "OFFLINE".equalsIgnoreCase(order.getOrderSource())) {
+    		response.setTableLabel("Table " + order.getTableId());
+    	}
+
+    	if (order.getUserId() != null) {
+    		userRepository.findById(order.getUserId()).ifPresent(user -> response.setCustomer(toUserSummary(user)));
+    	}
+
+    	if (order.getEmployeeId() != null) {
+    		employeeRepository.findById(order.getEmployeeId()).ifPresent(employee -> response.setEmployee(toEmployeeSummary(employee)));
+    	}
+
+    	paymentRepository.findFirstByOrderIdOrderByIdDesc(order.getId())
+    			.ifPresent(payment -> response.setPayment(toPaymentSummary(payment)));
+
+    	List<OrderItemEntity> orderItems = orderItemRepository.findByOrderId(order.getId());
+    	response.setItems(toOrderItemDetails(orderItems));
+
+    	return response;	
     }
     // sua trang thai
     public AdminOrderResponse updateStatus(Long id, String status) {
@@ -270,4 +308,57 @@ public class OrderServiceImpl implements OrderService {
     }
     
     
+    private AdminOrderResponse.UserSummary toUserSummary(UserEntity user) {
+    	return new AdminOrderResponse.UserSummary(
+    			user.getId(),
+    			user.getName(),
+    			user.getUsername(),
+    			user.getEmail()
+    	);
+    }
+
+    private AdminOrderResponse.EmployeeSummary toEmployeeSummary(EmployeeEntity employee) {
+    	return new AdminOrderResponse.EmployeeSummary(
+    			employee.getId(),
+    			employee.getName(),
+    			employee.getPosition(),
+    			employee.getPhone()
+    	);
+    }
+
+    private AdminOrderResponse.PaymentSummary toPaymentSummary(PaymentEntity payment) {
+    	return new AdminOrderResponse.PaymentSummary(
+    			payment.getId(),
+    			payment.getMethod(),
+    			payment.getAmount(),
+    			payment.getStatus(),
+    			payment.getPaidAt()
+    	);
+    }
+
+    private List<AdminOrderResponse.OrderItemDetail> toOrderItemDetails(List<OrderItemEntity> orderItems) {
+    	if (orderItems == null || orderItems.isEmpty()) {
+    		return Collections.emptyList();
+    	}
+
+    	Set<Long> productIds = orderItems.stream()
+    			.map(OrderItemEntity::getProductId)
+    			.collect(Collectors.toSet());
+
+    	Map<Long, String> productNames = productRepository.findAllById(productIds).stream()
+    			.collect(Collectors.toMap(ProductEntity::getId, ProductEntity::getName));
+
+    	return orderItems.stream()
+    			.map(item -> new AdminOrderResponse.OrderItemDetail(
+    					item.getId(),
+    					item.getProductId(),
+    					productNames.getOrDefault(item.getProductId(), "Unknown product"),
+    					item.getQuantity(),
+    					item.getPrice(),
+    					item.getPrice() == null || item.getQuantity() == null
+    							? null
+    							: Long.valueOf(item.getPrice()) * item.getQuantity()
+    			))
+    			.collect(Collectors.toList());
+    }
 }
