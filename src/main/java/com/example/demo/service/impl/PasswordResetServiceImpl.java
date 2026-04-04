@@ -60,7 +60,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         PasswordResetTokenEntity passwordResetToken = new PasswordResetTokenEntity();
         passwordResetToken.setUserId(user.getId());
         passwordResetToken.setStatus(TokenStatus.UNUSED);
-        passwordResetToken.setCreateAt(LocalDateTime.now());
+        passwordResetToken.setCreatedAt(LocalDateTime.now());
         passwordResetToken.setExpireAt(LocalDateTime.now().plusMinutes(15));
         passwordResetToken.setToken(resetToken);
 
