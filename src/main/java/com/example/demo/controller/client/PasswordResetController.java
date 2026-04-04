@@ -19,8 +19,7 @@ import com.example.demo.service.PasswordResetService;
 import com.example.demo.repository.TokenRepository;
 
 @RestController
-@RequestMapping()  // ← THÊM DÒNG NÀY
-@CrossOrigin(origins = "https://fe-cafe-management.vercel.app")  // ← THÊM DÒNG NÀY (cho phép frontend call)
+@CrossOrigin(origins = "https://fe-cafe-management.vercel.app")  
 public class PasswordResetController {
     private final PasswordResetService passwordResetService;
     private final TokenRepository tokenRepository;
@@ -30,7 +29,6 @@ public class PasswordResetController {
         this.tokenRepository = tokenRepository;
     }
 
-    // Endpoint: POST /api/requestResetToken
     @PostMapping("/requestResetToken")
     public ResponseEntity<?> requestReset(@RequestBody TokenRequest tokenRequestDTO) {
         String token = passwordResetService.generateResetToken(tokenRequestDTO);
@@ -57,7 +55,6 @@ public class PasswordResetController {
                         .body(Map.of("message", "Token khong hop le hoac da het han")));
     }
 
-    // Endpoint: POST /api/resetPassword
     @PostMapping("/resetPassword")
     public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest passwordResetDTO) {
         String result = passwordResetService.resetPassword(passwordResetDTO);
