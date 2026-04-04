@@ -95,7 +95,7 @@ public class SecurityConfig {
                     .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
                 .requestMatchers(HttpMethod.DELETE, "/admin/products/**")
                     .hasAnyAuthority("ROLE_ADMIN")
-                .requestMatchers("/admin/orders/**")
+                .requestMatchers("/admin/order/**", "/admin/orders/**")
                     .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STAFF")
                 .requestMatchers(HttpMethod.GET, "/admin/employees/**")
                     .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
