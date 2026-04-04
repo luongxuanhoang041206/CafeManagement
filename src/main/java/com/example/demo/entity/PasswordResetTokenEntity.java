@@ -20,6 +20,7 @@ public class PasswordResetTokenEntity {
     @Enumerated(EnumType.STRING)
     private TokenStatus status;
     private LocalDateTime createAt;
+    private LocalDateTime expireAt;
     
     public Long getResetPWId() {
         return resetPWId;
@@ -51,7 +52,12 @@ public class PasswordResetTokenEntity {
     public void setCreateAt(LocalDateTime createAt) {
         this.createAt = createAt;
     }
-    
+    public LocalDateTime getExpireAt() {
+        return expireAt;
+    }
+    public void setExpireAt(LocalDateTime expireAt) {
+        this.expireAt = expireAt;
+    }
     
     
 }

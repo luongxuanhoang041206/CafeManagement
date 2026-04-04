@@ -18,4 +18,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>,
 	//phuc vu login
 	Optional<UserEntity> findByNameOrEmail(String name, String email);
 	Optional<UserEntity> findByUsername(String name);
+	
+	//phuc vu signup validation
+	boolean existsByUsername(String username);
+	boolean existsByEmail(String email);
 }

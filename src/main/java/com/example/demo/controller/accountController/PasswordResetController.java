@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
 
+import java.time.LocalDateTime;
+
 
 
 @Controller
@@ -40,9 +42,14 @@ public class PasswordResetController {
     public String showResetPasswordPage(@RequestParam("token") String token, Model model) {
         PasswordResetTokenEntity resetToken = tokenRepository.findByTokenAndStatus(token, TokenStatus.UNUSED).orElse(null);
         if (resetToken == null) {
-            model.addAttribute("error", "Invalid or expired token");
-            return "error";
+            return "redirect:/forgot-password?error=invalid";
         }
+
+        // kiem tra het han chua, neu het han thi redirect ve trang forgot-password va hien thong bao het han
+        if (resetToken.getExpireAt().isBefore(LocalDateTime.now())) {
+            return "redirect:/forgot-password?error=expired";
+        }
+
         model.addAttribute("token", token);
         model.addAttribute("userId", resetToken.getUserId());
         return "resetpassword";

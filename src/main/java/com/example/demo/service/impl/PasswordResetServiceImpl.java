@@ -42,6 +42,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
                 passwordResetTokenE.setUserId(user.getId());
                 passwordResetTokenE.setStatus(TokenStatus.UNUSED);
                 passwordResetTokenE.setCreateAt(LocalDateTime.now());
+                passwordResetTokenE.setExpireAt(LocalDateTime.now().plusMinutes(5)); //chinh ve 5 de test het han nhanh hon
                 passwordResetTokenE.setToken(resetToken);
 
                 tokenRepository.save(passwordResetTokenE);
@@ -67,6 +68,11 @@ public class PasswordResetServiceImpl implements PasswordResetService {
             PasswordResetTokenEntity passwordResetTokenE = tokenRepository.findByTokenAndStatus(passwordResetDTO.token(), TokenStatus.UNUSED).orElse(null);
             if(passwordResetTokenE == null){
                 return "Token khong hop le";
+            }
+
+            // kiem tra het han chua
+            if (passwordResetTokenE.getExpireAt().isBefore(LocalDateTime.now())) {
+                return "Token da het han";
             }
 
             //set cho thanh dung roi

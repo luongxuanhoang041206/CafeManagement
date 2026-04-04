@@ -30,12 +30,13 @@ signupForm.addEventListener('submit', (event) => {
         body: JSON.stringify(data)
     })
     .then(async response => {
-        if (response.ok) {
-            alert("Đăng ký thành công! Kiểm tra Supabase nhé.");
+        const result = await response.json();
+
+        if (result.success) {
+            alert("Đăng ký thành công!");
             signupForm.reset();
         } else {
-            const errorData = await response.text();
-            alert("Lỗi từ Server: " + errorData);
+            alert("Lỗi: " + result.message);
         }
     })
     .catch(error => {
