@@ -91,7 +91,7 @@ public class SecurityConfig {
                     "/auth/resetPassword",
                     "/reset-password/validate",
                     "/auth/reset-password/validate",
-                    "/api/requestResetToken",
+                    "/requestResetToken",
                     "/auth/api/requestResetToken",
                     "/api/resetPassword",
                     "/auth/api/resetPassword",
