@@ -83,6 +83,18 @@ public class SecurityConfig {
                     "/products/**",
                     "/auth/login",
                     "/auth/register",
+                    "/forgot-password",
+                    "/auth/forgot-password",
+                    "/reset-password",
+                    "/auth/reset-password",
+                    "/resetPassword",
+                    "/auth/resetPassword",
+                    "/reset-password/validate",
+                    "/auth/reset-password/validate",
+                    "/api/requestResetToken",
+                    "/auth/api/requestResetToken",
+                    "/api/resetPassword",
+                    "/auth/api/resetPassword",
                     "/auth/logout",
                     "/admin/login",
                     "/admin/logout"
@@ -95,7 +107,7 @@ public class SecurityConfig {
                     .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
                 .requestMatchers(HttpMethod.DELETE, "/admin/products/**")
                     .hasAnyAuthority("ROLE_ADMIN")
-                .requestMatchers("/admin/order/**", "/admin/orders/**")
+                .requestMatchers(HttpMethod.GET,"/admin/order/**", "/admin/orders/**")
                     .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STAFF")
                 .requestMatchers(HttpMethod.GET, "/admin/employees/**")
                     .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")

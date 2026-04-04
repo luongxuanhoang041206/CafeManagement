@@ -15,6 +15,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>,
 	//List<UserEntity> findByNameContainingIgnoreCase(String name);
 
 	Optional<UserEntity> findByUsername(String username);
+
+	Optional<UserEntity> findByUsernameOrEmail(String username, String email);
 	
 	boolean existsByUsername(String username);
 
