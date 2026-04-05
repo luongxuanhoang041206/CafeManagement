@@ -63,10 +63,11 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration config = new CorsConfiguration();
                 config.addAllowedOrigin("http://localhost:3000");
+                config.addAllowedOrigin("http://localhost:10000");
                 config.addAllowedOrigin("http://localhost:10000/v3/api-docs");
                 config.addAllowedOrigin("http://localhost:10000/swagger-ui.html");
                 config.addAllowedOrigin("https://fe-cafe-management.vercel.app");
-                config.addAllowedOrigin("https://*.vercel.app");
+                config.addAllowedOriginPattern("https://*.vercel.app");
                 config.addAllowedHeader("*");
                 config.addAllowedMethod("*");
                 config.setAllowCredentials(true);
