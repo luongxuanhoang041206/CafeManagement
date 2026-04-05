@@ -121,26 +121,39 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     }
 
     private void sendResetEmail(String email, String token) {
+    	System.out.println("🔍 sendResetEmail called with email: " + email);
+        
         if (email == null || email.isBlank()) {
+            System.out.println("⚠️  Email is null or blank");
             return;
         }
-
+ 
         JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
+        System.out.println("🔍 mailSender available: " + (mailSender != null));
+        
         if (mailSender == null) {
+            System.out.println("❌ JavaMailSender is NULL! Bean not found in Spring context");
             return;
         }
-
+ 
         String separator = passwordResetBaseUrl.contains("?") ? "&" : "?";
         String resetLink = passwordResetBaseUrl + separator + "token=" + token;
-
+        System.out.println("🔗 Reset link: " + resetLink);
+ 
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
             message.setSubject("Password Reset Request");
             message.setText("Click the link to reset your password: " + resetLink);
+            message.setFrom("pnguyencongthanh90@gmail.com");
+            
+            System.out.println("📧 Sending email to: " + email);
             mailSender.send(message);
-        } catch (Exception ignored) {
-            // The API still returns the token so the frontend can continue even without mail config.
+            System.out.println("✅ Email sent successfully to: " + email);
+            
+        } catch (Exception e) {
+            System.out.println("❌ Error sending email: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
