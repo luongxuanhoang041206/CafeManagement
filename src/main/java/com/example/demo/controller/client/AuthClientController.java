@@ -1,6 +1,7 @@
 package com.example.demo.controller.client;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,16 +85,28 @@ public class AuthClientController {
 
     @PostMapping("/register")
     public String signup(@RequestBody SignupRequest request) {
+        String username = request.getUsername() == null ? "" : request.getUsername().trim();
+        String email = request.getEmail() == null ? "" : request.getEmail().trim().toLowerCase(Locale.ROOT);
+        String password = request.getPassword() == null ? "" : request.getPassword().trim();
+        String name = request.getName() == null ? "" : request.getName().trim();
 
-        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+        if (username.isEmpty() || email.isEmpty() || password.isEmpty() || name.isEmpty()) {
+            return "Vui long nhap day du thong tin";
+        }
+
+        if (userRepository.findByUsername(username).isPresent()) {
             return "Username already exists";
         }
 
+        if (userRepository.existsByEmailIgnoreCase(email)) {
+            return "Email already exists";
+        }
+
         UserEntity user = new UserEntity();
-        user.setUsername(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setEmail(request.getEmail());
-        user.setName(request.getName());
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setEmail(email);
+        user.setName(name);
 
         user.setActive(true); 
         user.setRole("ROLE_USER"); 
