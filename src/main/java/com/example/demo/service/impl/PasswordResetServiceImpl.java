@@ -93,10 +93,6 @@ public class PasswordResetServiceImpl implements PasswordResetService {
             return "Token da het han";
         }
 
-        if (!passwordResetToken.getUserId().equals(passwordResetDTO.userId())) {
-            return "Token khong dung voi nguoi dung";
-        }
-
         UserEntity user = userRepository.findById(passwordResetDTO.userId()).orElse(null);
         if (user == null) {
             return "Khong tim thay nguoi dung";
