@@ -33,7 +33,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
             TokenRepository tokenRepository,
             PasswordEncoder passwordEncoder,
             ObjectProvider<JavaMailSender> mailSenderProvider,
-            @Value("${app.password-reset.base-url:http://localhost:3000/reset-password}") String passwordResetBaseUrl) {
+            @Value("${app.password-reset.base-url:https://fe-cafe-management.vercel.app/client/pages/reset-password.html}") String passwordResetBaseUrl) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
