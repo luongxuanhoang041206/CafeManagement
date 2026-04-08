@@ -101,6 +101,7 @@ public class SecurityConfig {
                     "/admin/login",
                     "/admin/logout"
                 ).permitAll()
+                .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/admin/products/**")
                     .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STAFF")
                 .requestMatchers(HttpMethod.POST, "/admin/products/**")
