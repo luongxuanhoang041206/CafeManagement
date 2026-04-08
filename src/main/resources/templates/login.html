@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/login.js}" defer></script>
+</head>
+<body>
+    <div class="sign_up">
+        <div class="image">
+            <img src="/image/side_picture.avif" alt="image">
+        </div>
+        <form id="form" class="form_signin" action="javascript:void(0)">
+            <div class="head_form">
+                <h1 class="title">This is the online service. We need your information for product, sale and support if you need </h1>
+                <p class="description">You know you want to</p>
+            </div>
+            <div class="body_form">
+                <div class="email_user">
+                    <label for="email">UserName or Email</label>
+                    <input name="loginKey" id="loginKey" placeholder="abc@gmail.com" required>
+                    <span></span>
+                </div>
+                <div class="password_field">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" placeholder="XXXXXXXX" required minlength="8" maxlength="100">
+                    <span></span>
+                </div>
+                <div class="forgot-password-container">
+                    <a th:href="@{/forgot-password}" class="forgot-password-link">Forgot password?</a>
+                </div>
+            </div>
+            <div class="foot_form">
+                <button id="btn" type="submit">logn in</button>
+                <p>You don't have an account. <a href="signup.html"><span class="sign">sign up</span></a></p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

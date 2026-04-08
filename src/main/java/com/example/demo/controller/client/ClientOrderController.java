@@ -10,8 +10,9 @@ import com.example.demo.dto.request.ClientCreateOrderRequest;
 import com.example.demo.dto.response.ClientOrderResponse;
 import com.example.demo.service.OrderService;
 
+@CrossOrigin("*")
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 public class ClientOrderController  {
 	private final OrderService service;
 
