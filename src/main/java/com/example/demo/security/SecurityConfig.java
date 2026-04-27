@@ -83,6 +83,7 @@ public class SecurityConfig {
                     ).permitAll()
                 .requestMatchers(
                     "/products/**",
+                    "/api/chat",
                     "/auth/login",
                     "/auth/register",
                     "/forgot-password",
