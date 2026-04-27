@@ -33,7 +33,7 @@ public class AIService {
                      WebClient.Builder webClientBuilder,
                      @Value("${openrouter.api-url}") String openRouterApiUrl,
                      @Value("${openrouter.model}") String model,
-                     @Value("${openrouter.api-key:}") String apiKey,
+                     @Value("${OPENROUTER_API_KEY}") String apiKey,
                      @Value("${openrouter.site-url:http://localhost:10000}") String siteUrl,
                      @Value("${openrouter.app-name:CafeManagement}") String appName) {
         this.productRepository = productRepository;
