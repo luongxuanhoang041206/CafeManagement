@@ -11,8 +11,10 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dto.request.CreateOrderItemRequest;
 import com.example.demo.dto.request.CreateOrderRequest;
@@ -236,7 +238,10 @@ public class OrderServiceImpl implements OrderService {
     		IngredientEntity in = ingredientMap.get(entry.getKey());
     		
     		if(in.getStock().compareTo(entry.getValue()) < 0) {
-    			throw new RuntimeException("Not enough ingredient: " + in.getName());
+    			throw new ResponseStatusException(
+    					HttpStatus.CONFLICT,
+    					"Khong du nguyen lieu: " + in.getName()
+    			);
     		}
     	}
     	
